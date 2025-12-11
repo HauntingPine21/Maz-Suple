@@ -1,72 +1,5 @@
-// RESPONSABLE: Rol 2 (Front)
-// Sistema Front adaptado para Suplementos
-console.log("Sistema de Suplementos cargado");
-
-document.addEventListener('DOMContentLoaded', function () {
-
-    // ==========================================
-    // MENÚ HAMBURGUESA
-    // ==========================================
-    const menuBtn = document.getElementById('mobile-menu-btn');
-    const navbarMenu = document.getElementById('navbar-menu');
-
-    if (menuBtn && navbarMenu) {
-        menuBtn.addEventListener('click', function (e) {
-            e.stopPropagation();
-            navbarMenu.classList.toggle('active');
-            console.log("Toggle menú");
-        });
-    }
-
-    // ==========================================
-    // SUBMENÚS
-    // ==========================================
-    const dropdownBtns = document.querySelectorAll('.dropbtn');
-    dropdownBtns.forEach(btn => {
-        btn.addEventListener('click', function (e) {
-            if (window.innerWidth <= 768) {
-                e.preventDefault();
-                e.stopPropagation();
-                const dropdownContent = this.nextElementSibling;
-                const abierto = dropdownContent.classList.contains('show');
-                document.querySelectorAll('.dropdown-content').forEach(c => c.classList.remove('show'));
-                if (!abierto) dropdownContent.classList.add('show');
-            }
-        });
-    });
-
-    // ==========================================
-    // CERRAR MENÚ AL CLIC FUERA
-    // ==========================================
-    document.addEventListener('click', function (e) {
-        if (window.innerWidth <= 768) {
-            if (navbarMenu && !navbarMenu.contains(e.target) && e.target !== menuBtn) {
-                navbarMenu.classList.remove('active');
-                document.querySelectorAll('.dropdown-content').forEach(c => c.classList.remove('show'));
-            }
-        }
-    });
-
-    // ==========================================
-    // CONFIRM ACTIONS
-    // ==========================================
-    document.addEventListener('click', function (e) {
-        const btn = e.target.closest('.btn-confirm-action');
-        if (btn) {
-            const msg = btn.dataset.confirmMessage || '¿Estás seguro?';
-            if (!confirm(msg)) e.preventDefault();
-        }
-    });
-
-});
-
-// ==========================================
-// LÓGICA DE COMPRAS (compras.php)
-// ==========================================
 document.addEventListener('DOMContentLoaded', function () {
     const inputProducto = document.getElementById('input-producto-compra');
-    if (!inputProducto) return;
-
     const btnAgregar = document.getElementById('btn-agregar-item');
     const tablaDetalle = document.getElementById('tabla-detalle-compra');
     const totalDisplay = document.getElementById('total-compra-display');
@@ -75,12 +8,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let itemsCompra = {};
 
+    // --- Buscar y agregar producto ---
     btnAgregar.addEventListener('click', buscarYAgregarProducto);
-    inputProducto.addEventListener('keypress', e => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            buscarYAgregarProducto();
-        }
+    inputProducto.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') { e.preventDefault(); buscarYAgregarProducto(); }
     });
 
     async function buscarYAgregarProducto() {
@@ -88,35 +19,35 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!query) return;
 
         try {
-            const res = await fetch(`ajax/buscar_producto.php?q=${encodeURIComponent(query)}`);
+            const res = await fetch(`ajax/buscar_producto.php?q=${query}`);
             const productos = await res.json();
 
             if (productos.length > 0) {
-                const p = productos[0];
-                if (!itemsCompra[p.id]) {
-                    itemsCompra[p.id] = {
-                        id_producto: p.id,
-                        nombre: p.nombre,
-                        codigo: p.sku || p.codigo,
+                const producto = productos[0];
+                if (!itemsCompra[producto.id]) {
+                    itemsCompra[producto.id] = {
+                        id_suplemento: producto.id,
+                        nombre: producto.nombre || producto.titulo,
                         cantidad: 1,
-                        costo: parseFloat(p.precio_venta) || 0
+                        costo: parseFloat(producto.precio_venta) || 0
                     };
+                    renderizarTabla();
                 }
                 inputProducto.value = '';
-                renderTabla();
             } else {
                 alert('Producto no encontrado.');
             }
         } catch (err) {
-            console.error('Error al buscar producto:', err);
-            alert('Error al buscar producto.');
+            console.error(err);
+            alert('Error al buscar producto');
         }
     }
 
-    function renderTabla() {
+    // --- Renderizar tabla ---
+    function renderizarTabla() {
         tablaDetalle.innerHTML = '';
         if (Object.keys(itemsCompra).length === 0) {
-            tablaDetalle.innerHTML = '<tr><td colspan="6" class="text-center text-muted">Agrega suplementos para crear la orden</td></tr>';
+            tablaDetalle.innerHTML = '<tr><td colspan="6" class="text-center text-muted">Agrega productos para comenzar la orden</td></tr>';
             calcularTotal();
             return;
         }
@@ -125,34 +56,34 @@ document.addEventListener('DOMContentLoaded', function () {
             const item = itemsCompra[id];
             const subtotal = (item.cantidad * item.costo).toFixed(2);
             tablaDetalle.innerHTML += `
-                <tr data-id="${item.id_producto}">
+                <tr data-id="${item.id_suplemento}">
                     <td>${item.nombre}</td>
-                    <td>${item.codigo}</td>
+                    <td>${item.id_suplemento}</td>
                     <td><input type="number" class="input-cantidad" value="${item.cantidad}" min="1"></td>
-                    <td><input type="number" class="input-costo" value="${item.costo.toFixed(2)}" step="0.01"></td>
-                    <td class="subtotal-celda">$${subtotal}</td>
-                    <td class="text-center"><button type="button" class="btn-remover btn-icon-remove">X</button></td>
+                    <td><input type="number" class="input-costo" value="${item.costo.toFixed(2)}" min="0" step="0.01"></td>
+                    <td class="text-right subtotal-celda">$${subtotal}</td>
+                    <td class="text-center"><button type="button" class="btn-remover">X</button></td>
                 </tr>
             `;
         }
-        agregarEventosTabla();
         calcularTotal();
+        agregarListenersInputs();
     }
 
-    function agregarEventosTabla() {
+    function agregarListenersInputs() {
         tablaDetalle.querySelectorAll('tr').forEach(fila => {
             const id = fila.dataset.id;
             fila.querySelector('.input-cantidad').addEventListener('change', e => {
                 itemsCompra[id].cantidad = parseInt(e.target.value) || 1;
-                renderTabla();
+                renderizarTabla();
             });
             fila.querySelector('.input-costo').addEventListener('change', e => {
-                itemsCompra[id].costo = parseFloat(e.target.value) || 0;
-                renderTabla();
+                itemsCompra[id].costo = parseFloat(e.target.value.replace(',', '.')) || 0;
+                renderizarTabla();
             });
             fila.querySelector('.btn-remover').addEventListener('click', () => {
                 delete itemsCompra[id];
-                renderTabla();
+                renderizarTabla();
             });
         });
     }
@@ -165,26 +96,35 @@ document.addEventListener('DOMContentLoaded', function () {
         totalDisplay.textContent = `$${total.toFixed(2)}`;
     }
 
-    btnGuardar.addEventListener('click', async function () {
-        if (!selectProveedor.value) return alert('Debes seleccionar un proveedor.');
-        if (Object.keys(itemsCompra).length === 0) return alert('Agrega al menos un suplemento.');
+    // --- Guardar compra ---
+    btnGuardar.addEventListener('click', async () => {
+        if (!selectProveedor.value) { alert('Seleccione un proveedor'); return; }
+        if (Object.keys(itemsCompra).length === 0) { alert('Agregue al menos un producto'); return; }
 
-        if (!confirm('¿Registrar esta compra? El stock aumentará.')) return;
+        if (!confirm('Confirma la creación de la orden de compra?')) return;
 
-        const datosCompra = { id_proveedor: selectProveedor.value, items: Object.values(itemsCompra) };
+        const datosCompra = {
+            proveedor: selectProveedor.value,
+            items: Object.values(itemsCompra)
+        };
+
         try {
             const res = await fetch('ajax/confirmar_compra.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(datosCompra)
             });
-            const r = await res.json();
-            if (r.status === 'ok') {
-                alert(`Compra guardada. Folio ${r.folio}`);
-                location.reload();
+            const resultado = await res.json();
+            if (resultado.status === 'ok') {
+                alert(`Compra registrada. Folio: ${resultado.folio}`);
+                window.location.reload();
             } else {
-                alert('Error: ' + r.msg);
+                alert('Error: ' + resultado.msg);
             }
-        } catch (err) { console.error(err); alert('Error de conexión.'); }
+        } catch (err) {
+            console.error(err);
+            alert('Error de conexión');
+        }
     });
 });
+                    

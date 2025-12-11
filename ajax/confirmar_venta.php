@@ -4,6 +4,7 @@ require_once '../config/db.php';
 
 header('Content-Type: application/json');
 
+// Validación básica
 if (empty($_SESSION['carrito']) || !isset($_SESSION['user'])) {
     echo json_encode(['status' => 'error', 'msg' => 'Carrito vacío o sesión caducada']);
     exit;
@@ -12,67 +13,55 @@ if (empty($_SESSION['carrito']) || !isset($_SESSION['user'])) {
 $id_usuario = $_SESSION['user']['id'];
 $carrito = $_SESSION['carrito'];
 
-// Backend recalcula todo
+// Recalcular totales
 $subtotal = 0;
 foreach ($carrito as $item) {
-    $subtotal += $item['precio'] * $item['cantidad'];
+    $subtotal += $item['costo'] * $item['cantidad']; // costo enviado desde JS
 }
-
-$iva = $subtotal * 0.16;
+$iva = $subtotal * 0.16; // Ajusta si tu IVA cambia
 $total = $subtotal + $iva;
 
 $mysqli->begin_transaction();
 
 try {
     // 1. Insertar encabezado de venta
-    $sql_venta = "INSERT INTO ventas (id_usuario, subtotal, iva, total, fecha_hora)
+    $sql_venta = "INSERT INTO ventas (id_usuario, subtotal, iva, total, fecha_hora) 
                   VALUES (?, ?, ?, ?, NOW())";
     $stmt = $mysqli->prepare($sql_venta);
     $stmt->bind_param("iddd", $id_usuario, $subtotal, $iva, $total);
     $stmt->execute();
     $id_venta = $mysqli->insert_id;
 
-    // 2. Preparar sentencias
-    $sql_det = "INSERT INTO ventas_detalle (id_venta, id_producto, cantidad, precio, importe)
-                VALUES (?, ?, ?, ?, ?)";
+    // 2. Preparar statements de detalle y stock
+    $sql_detalle = "INSERT INTO detalle_ventas (id_venta, id_suplemento, cantidad, precio_unitario, importe) 
+                    VALUES (?, ?, ?, ?, ?)";
+    $stmt_det = $mysqli->prepare($sql_detalle);
 
-    $sql_stock = "UPDATE inventario
-                  SET cantidad = cantidad - ?
-                  WHERE id_producto = ? AND cantidad >= ?";
+    $sql_stock = "UPDATE existencias 
+                  SET cantidad = cantidad - ? 
+                  WHERE id_suplemento = ? AND cantidad >= ?";
+    $stmt_stock = $mysqli->prepare($sql_stock);
 
-    $stmt_det = $mysqli->prepare($sql_det);
-    $stmt_stk = $mysqli->prepare($sql_stock);
+    foreach ($carrito as $item) {
+        $id_suplemento = $item['id_suplemento'];
+        $cantidad = $item['cantidad'];
+        $precio = $item['costo'];
+        $importe = $precio * $cantidad;
 
-    foreach ($carrito as $p) {
-
-        $importe = $p['precio'] * $p['cantidad'];
-
-        // Insertar detalle
-        $stmt_det->bind_param(
-            "iiidd",
-            $id_venta,
-            $p['id'],        // id_producto
-            $p['cantidad'],
-            $p['precio'],
-            $importe
-        );
+        // Insertar detalle de venta
+        $stmt_det->bind_param("iiidd", $id_venta, $id_suplemento, $cantidad, $precio, $importe);
         $stmt_det->execute();
 
-        // Descontar stock (validación cantidad >= ?)
-        $stmt_stk->bind_param(
-            "iii",
-            $p['cantidad'],  // -X
-            $p['id'],        // id_producto
-            $p['cantidad']   // validar suficiente stock
-        );
-        $stmt_stk->execute();
+        // Actualizar stock
+        $stmt_stock->bind_param("iii", $cantidad, $id_suplemento, $cantidad);
+        $stmt_stock->execute();
 
         if ($mysqli->affected_rows === 0) {
-            throw new Exception("Stock insuficiente para: " . $p['titulo']);
+            throw new Exception("Stock insuficiente para: " . $item['nombre']);
         }
     }
 
-    // 3. Finalizar
+    // Commit final
     $mysqli->commit();
     unset($_SESSION['carrito']);
 

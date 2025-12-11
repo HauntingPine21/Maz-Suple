@@ -1,20 +1,24 @@
 <?php
-// compras.php
-
 require_once 'includes/security_guard.php'; 
 require_once 'config/db.php';
 
-// Rol actual
-$rol = $_SESSION['user']['rol'] ?? '';
+$rol = $_SESSION['user']['rol']; 
 
-// Obtener proveedores activos
+// Proveedores activos
 $proveedores = [];
-if (isset($mysqli)) {
-    $sql_prov = "SELECT id_proveedor AS id, nombre FROM proveedores WHERE estatus = 1 ORDER BY nombre";
-    if ($res_prov = $mysqli->query($sql_prov)) {
-        while ($row = $res_prov->fetch_assoc()) {
-            $proveedores[] = $row;
-        }
+$sql_prov = "SELECT id, nombre FROM proveedores WHERE estatus = 1 ORDER BY nombre";
+if ($res_prov = $mysqli->query($sql_prov)) {
+    while ($row = $res_prov->fetch_assoc()) {
+        $proveedores[] = $row;
+    }
+}
+
+// Suplementos activos
+$suplementos = [];
+$sql_supp = "SELECT id, codigo, nombre, precio_venta FROM suplementos WHERE estatus = 1 ORDER BY nombre";
+if ($res_supp = $mysqli->query($sql_supp)) {
+    while ($row = $res_supp->fetch_assoc()) {
+        $suplementos[] = $row;
     }
 }
 ?>
@@ -28,12 +32,13 @@ if (isset($mysqli)) {
     <link rel="icon" type="image/png" href="assets/img/logo-maria-de-letras_icon.svg">
 </head>
 <body>
-
 <div class="navbar">
     <div class="navbar-logo">
         <img src="assets/img/logo-maria-de-letras_v2.svg" alt="Logo">
     </div>
-    <button class="menu-toggle" id="mobile-menu-btn"><span></span><span></span><span></span></button>
+    <button class="menu-toggle" id="mobile-menu-btn">
+        <span></span><span></span><span></span>
+    </button>
     <div class="navbar-menu" id="navbar-menu">
         <div class="dropdown">
             <button class="dropbtn">Cajero ▾</button>
@@ -44,24 +49,24 @@ if (isset($mysqli)) {
             </div>
         </div>
         <?php if ($rol === 'admin'): ?>
-        <div class="dropdown">
-            <button class="dropbtn">Gestión ▾</button>
-            <div class="dropdown-content">
-                <a href="productos.php">Productos</a>
-                <a href="compras.php">Compras</a>
-                <a href="usuarios.php">Usuarios</a>
+            <div class="dropdown">
+                <button class="dropbtn">Gestión ▾</button>
+                <div class="dropdown-content">
+                    <a href="productos.php">Suplementos</a>
+                    <a href="compras.php">Compras</a>
+                    <a href="usuarios.php">Usuarios</a>
+                </div>
             </div>
-        </div>
-        <div class="dropdown">
-            <button class="dropbtn">Reportes ▾</button>
-            <div class="dropdown-content">
-                <a href="reportes/compras.php">Reportes Compra</a>
-                <a href="reportes/devoluciones.php">Reportes Devoluciones</a>
-                <a href="reportes/inventario.php">Reportes Inventario</a>
-                <a href="reportes/ventas_detalle.php">Reportes Detalle</a>
-                <a href="reportes/ventas_encabezado.php">Reportes Encabezado</a>
+            <div class="dropdown">
+                <button class="dropbtn">Reportes ▾</button>
+                <div class="dropdown-content">
+                    <a href="reportes/compras.php">Reportes Compra</a>
+                    <a href="reportes/devoluciones.php">Reportes Devoluciones</a>
+                    <a href="reportes/inventario.php">Reportes Inventario</a>
+                    <a href="reportes/ventas_detalle.php">Reportes Detalle</a>
+                    <a href="reportes/ventas_encabezado.php">Reportes Encabezado</a>
+                </div>  
             </div>
-        </div>
         <?php endif; ?>
         <a href="includes/logout.php" class="btn-general">Cerrar Sesión</a>
     </div>
@@ -92,20 +97,22 @@ if (isset($mysqli)) {
     </div>
 
     <div class="card mt-20">
-        <h3>Detalle de Productos a Comprar</h3>
+        <h3>Detalle de Suplementos a Comprar</h3>
         
         <div class="flex-row mb-15">
-            <input type="text" 
+            <input 
+                type="text" 
                 id="input-producto-compra" 
-                placeholder="Buscar producto por título o código..." 
-                class="flex-grow w-auto">
+                placeholder="Buscar suplemento por nombre o código..." 
+                class="flex-grow w-auto"
+            >
             <button type="button" id="btn-agregar-item" class="btn-general w-150">Agregar Item</button>
         </div>
 
         <table>
             <thead>
                 <tr>
-                    <th class="col-35">Producto</th>
+                    <th class="col-35">Suplemento</th>
                     <th class="col-15">Código</th>
                     <th class="col-15">Cantidad</th>
                     <th class="col-15">Costo Unitario</th>
@@ -115,7 +122,7 @@ if (isset($mysqli)) {
             </thead>
             <tbody id="tabla-detalle-compra">
                 <tr>
-                    <td colspan="6" class="text-center text-muted">Agrega productos para comenzar la orden</td>
+                    <td colspan="6" class="text-center text-muted">Agrega suplementos para comenzar la orden</td>
                 </tr>
             </tbody>
         </table>
@@ -130,6 +137,6 @@ if (isset($mysqli)) {
     </div>
 </div>
 
-<script src="js/main.js"></script>
+<script src="js/compras.js"></script>
 </body>
 </html>

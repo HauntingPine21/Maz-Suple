@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function () {
+/*document.addEventListener('DOMContentLoaded', function () {
     const inputSuplemento = document.getElementById('input-producto-compra');
     const btnAgregar = document.getElementById('btn-agregar-item');
     const tablaDetalle = document.getElementById('tabla-detalle-compra');
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!query) return;
 
         try {
-            const res = await fetch(`../ajax/buscar_producto.php?q=${encodeURIComponent(query)}`);
+            const res = await fetch(`ajax/buscar_producto.php?q=${encodeURIComponent(query)}`);
             const suplementos = await res.json();
 
             if (suplementos.length > 0) {
@@ -79,22 +79,34 @@ document.addEventListener('DOMContentLoaded', function () {
     function agregarEventosTabla() {
         tablaDetalle.querySelectorAll('tr').forEach(fila => {
             const id = fila.dataset.id;
-            fila.querySelector('.input-cantidad').addEventListener('change', e => {
-                let val = parseInt(e.target.value);
-                if (isNaN(val) || val <= 0) val = 1;
-                itemsCompra[id].cantidad = val;
-                renderTabla();
-            });
-            fila.querySelector('.input-costo').addEventListener('change', e => {
-                let val = parseFloat(e.target.value);
-                if (isNaN(val) || val < 0) val = 0;
-                itemsCompra[id].costo = val;
-                renderTabla();
-            });
-            fila.querySelector('.btn-remover').addEventListener('click', () => {
-                delete itemsCompra[id];
-                renderTabla();
-            });
+            const inputCant = fila.querySelector('.input-cantidad');
+            const inputCosto = fila.querySelector('.input-costo');
+            const btnRemove = fila.querySelector('.btn-remover');
+
+            if (inputCant) {
+                inputCant.addEventListener('change', e => {
+                    let val = parseInt(e.target.value);
+                    if (isNaN(val) || val <= 0) val = 1;
+                    itemsCompra[id].cantidad = val;
+                    renderTabla();
+                });
+            }
+
+            if (inputCosto) {
+                inputCosto.addEventListener('change', e => {
+                    let val = parseFloat(e.target.value);
+                    if (isNaN(val) || val < 0) val = 0;
+                    itemsCompra[id].costo = val;
+                    renderTabla();
+                });
+            }
+
+            if (btnRemove) {
+                btnRemove.addEventListener('click', () => {
+                    delete itemsCompra[id];
+                    renderTabla();
+                });
+            }
         });
     }
 
@@ -113,13 +125,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const datosCompra = {
             id_proveedor: parseInt(selectProveedor.value),
-            items: Object.values(itemsCompra).map(item => {
-                return {
-                    id_suplemento: parseInt(item.id_suplemento),
-                    cantidad: parseInt(item.cantidad) || 1,
-                    costo: parseFloat(item.costo) || 0
-                };
-            })
+            items: Object.values(itemsCompra).map(item => ({
+                id_suplemento: parseInt(item.id_suplemento),
+                cantidad: parseInt(item.cantidad) || 1,
+                costo: parseFloat(item.costo) || 0
+            }))
         };
 
         try {
@@ -140,4 +150,4 @@ document.addEventListener('DOMContentLoaded', function () {
             alert('Error de conexión.');
         }
     });
-});
+});*/
