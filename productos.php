@@ -5,14 +5,15 @@ require_once 'includes/security_guard.php';
 $rol = $_SESSION['user']['rol'];
 $mensaje = "";
 
-// ================================
+// ================================================
 // PROCESAR FORMULARIO DE ALTA
-// ================================
+// ================================================
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'crear') {
     $codigo = trim($_POST['codigo']);
     $nombre = trim($_POST['nombre']);
     $marca = trim($_POST['marca']);
     $precio = $_POST['precio'];
+    $stock_inicial = $_POST['stock'] ?? 0;
     
     $imagen_binaria = null;
     $tipo_mime = 'image/jpeg';
@@ -22,11 +23,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $imagen_binaria = file_get_contents($_FILES['imagen']['tmp_name']);
     }
 
-    if (!is_numeric($precio)) {
-        $mensaje = "El precio no es válido.";
+    if (!is_numeric($precio) || !is_numeric($stock_inicial) || $stock_inicial < 0) {
+        $mensaje = "El precio o el stock no son válidos.";
     } else {
         $mysqli->begin_transaction();
         try {
+            // Insertar suplemento
             $sql = "INSERT INTO suplementos (codigo, nombre, marca, precio_venta, estatus)
                      VALUES (?, ?, ?, ?, 1)";
             $stmt = $mysqli->prepare($sql);
@@ -45,11 +47,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 $stmt_img->execute();
             }
 
-            // Existencia inicial
-            $mysqli->query("INSERT INTO existencias (id_suplemento, cantidad) VALUES ($id_suplemento, 0)");
+            // Existencia inicial con la cantidad que ingrese el usuario
+            $mysqli->query("INSERT INTO existencias (id_suplemento, cantidad) VALUES ($id_suplemento, $stock_inicial)");
 
             $mysqli->commit();
-            $mensaje = "Suplemento creado correctamente.";
+            $mensaje = "Suplemento creado correctamente con stock inicial de $stock_inicial.";
         } catch (Exception $e) {
             $mysqli->rollback();
             $mensaje = str_contains($e->getMessage(), 'Duplicate') ?
@@ -58,6 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         }
     }
 }
+
 
 // ================================
 // ACTIVAR / DESACTIVAR

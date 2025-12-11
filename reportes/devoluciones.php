@@ -1,8 +1,8 @@
 <?php
 // devoluciones.php
 
-require_once 'includes/seguridad_basica.php';
-require_once 'config/db.php';
+require_once '../includes/seguridad_basica.php';
+require_once '../config/db.php';
 
 $rol = $_SESSION['user']['rol'];
 $venta_encontrada = null;
