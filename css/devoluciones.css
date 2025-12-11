@@ -1,0 +1,225 @@
+/* ====================================================================
+    0. PALETA DE COLORES Y ESTRUCTURA GLOBAL
+==================================================================== */
+:root {
+    /* Colores del Tema (Blanco y Azul) */
+    --color-acento-principal: #007bff; /* Azul vibrante */
+    --color-acento-secundario: #0056b3; /* Azul marino/oscuro */
+    --color-fondo: #ffffff;
+    --color-borde: #dee2e6;
+    --color-texto-oscuro: #212529;
+    --color-texto-claro: #ffffff;
+    --color-error: #dc3545; /* Rojo para alertas y devoluciones */
+    --color-exito: #28a745;
+    
+    /* Variables del Layout Sidebar */
+    --sidebar-width: 250px;
+    --sidebar-color: #2c3e50; /* Azul oscuro para la barra lateral */
+    --main-bg: #f8f9fa;      /* Fondo de contenido principal (gris muy claro) */
+    --main-padding: 30px;
+}
+
+/* ====================================================================
+    1. LAYOUT (SIDEBAR Y CONTENIDO) - IDÉNTICO A VENTAS Y DASHBOARD
+==================================================================== */
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--main-bg);
+    margin: 0;
+    display: flex;
+    min-height: 100vh;
+    overflow-x: hidden;
+    color: var(--color-texto-oscuro);
+}
+
+.main-content-wrapper {
+    margin-left: var(--sidebar-width);
+    padding: var(--main-padding);
+    flex-grow: 1;
+    width: calc(100% - var(--sidebar-width));
+    box-sizing: border-box;
+    padding-top: 40px; 
+}
+
+/* SIDEBAR Y MENÚ */
+.navbar {
+    position: fixed; top: 0; left: 0; width: var(--sidebar-width); height: 100vh;
+    background: var(--sidebar-color); box-shadow: 4px 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000; display: flex; flex-direction: column; 
+    align-items: center; padding: 20px 10px; box-sizing: border-box;
+}
+.navbar-logo { margin-bottom: 25px; }
+.navbar-logo img { max-height: 50px; }
+.navbar-menu { display: flex; flex-direction: column; width: 100%; flex-grow: 1; }
+.navbar-links { width: 100%; margin-bottom: 10px; }
+.nav-divider { border: 0; border-top: 1px solid #455a64; width: 80%; margin: 15px auto; }
+
+.nav-link, .dropbtn {
+    display: block; margin: 5px 0; padding: 12px 15px; text-decoration: none;
+    font-weight: 600; color: var(--color-texto-claro) !important;
+    border-radius: 6px; transition: background-color 0.2s;
+    text-align: left; width: 100%; box-sizing: border-box;
+    background-color: transparent; border: none;
+}
+.nav-link.active { background-color: var(--color-acento-principal); }
+.nav-link:hover, .dropbtn:hover { background-color: var(--color-acento-principal); }
+
+/* Dropdown */
+.dropdown { position: relative; width: 100%; margin-bottom: 10px; }
+.dropdown-content { display: none; position: relative; background-color: #3e5265; width: 100%; padding: 5px 0; border-radius: 0 0 6px 6px; }
+.dropdown:hover .dropdown-content { display: block; }
+.dropdown-content a { padding: 8px 15px 8px 30px; font-size: 14px; font-weight: 400; color: var(--color-texto-claro); }
+.dropdown-content a:hover { background-color: var(--color-acento-secundario); }
+
+/* Info y Logout */
+.navbar-user-info { margin-top: auto; width: 100%; padding-top: 15px; border-top: 1px solid #455a64; text-align: center; }
+.navbar-user-info .user-text { display: block; color: var(--color-borde); margin-bottom: 8px; font-size: 0.9em; }
+.btn-logout { background: var(--color-error); color: var(--color-texto-claro) !important; padding: 8px 15px; border-radius: 6px; display: inline-block; width: 90%; text-decoration: none; font-size: 14px; font-weight: 600; }
+.btn-logout:hover { background: #b02a37; }
+
+
+/* ====================================================================
+    2. ESTILOS DEVOLUCIONES (BÚSQUEDA Y DETALLE)
+==================================================================== */
+
+h2 { color: var(--color-texto-oscuro); margin-bottom: 20px; }
+
+/* Tarjeta de Búsqueda */
+.card {
+    background: var(--color-fondo);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--color-borde);
+    box-sizing: border-box;
+    margin-bottom: 20px;
+}
+.card h3 { color: var(--color-acento-secundario); margin-top: 0; margin-bottom: 15px; }
+
+/* Formulario de Búsqueda */
+.form-search { width: 100%; }
+.flex-row { display: flex; gap: 10px; align-items: center; }
+
+.input-padded {
+    width: 100%; padding: 12px; margin: 0;
+    border: 1px solid var(--color-borde); border-radius: 6px;
+    font-size: 16px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+    box-sizing: border-box;
+}
+.input-padded:focus { 
+    border-color: var(--color-acento-principal);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+/* Tarjeta de Detalles de Venta Encontrada */
+.sale-info {
+    display: flex; gap: 25px; margin-bottom: 15px; font-size: 15px;
+    flex-wrap: wrap; /* Para móviles */
+}
+.sale-info strong { color: var(--color-acento-secundario); }
+.text-error { color: var(--color-error); }
+.divider { border: 0; border-top: 1px solid var(--color-borde); margin: 15px 0; }
+
+/* Tabla de Productos a Devolver */
+.table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+table {
+    width: 100%; border-collapse: collapse; margin-top: 15px;
+    border: 1px solid var(--color-borde); border-radius: 8px;
+    overflow: hidden; min-width: 600px;
+}
+th { background: #e9ecef; color: var(--color-texto-oscuro); }
+th, td { padding: 12px; border-bottom: 1px solid #eee; font-size: 14px; }
+td { vertical-align: middle; }
+
+/* Columnas Específicas */
+.col-dev { width: 50px; }
+.col-cant { width: 100px; }
+.col-precio { width: 120px; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+
+/* Input de Cantidad en la Tabla */
+.input-cant {
+    width: 60px; padding: 5px; text-align: center;
+    border: 1px solid var(--color-borde); border-radius: 4px;
+    box-sizing: border-box;
+}
+
+/* Checkbox (estilo básico) */
+.check-devolucion { transform: scale(1.2); }
+
+/* Motivo de Devolución */
+.form-group label { display: block; font-weight: 600; margin-bottom: 5px; }
+
+/* Botones de Acción */
+.btn-general {
+    background: var(--color-acento-principal);
+    color: var(--color-texto-claro) !important;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+.btn-general:hover { background: var(--color-acento-secundario); }
+.btn-error-action {
+    background: var(--color-error); /* El botón de Devolución usa el color rojo */
+}
+.btn-error-action:hover {
+    background: #b02a37;
+}
+
+/* Utilidades */
+.w-150 { width: 150px; }
+.w-full { width: 100%; }
+.mt-15 { margin-top: 15px; }
+.mt-20 { margin-top: 20px; }
+.mb-20 { margin-bottom: 20px; }
+
+/* Alerta de Error */
+.alert-custom-danger {
+    background: #f8d7da;
+    color: var(--color-error);
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    border: 1px solid #f5c6cb;
+    font-weight: 600;
+}
+
+
+/* ====================================================================
+    3. RESPONSIVE (Móvil)
+==================================================================== */
+.menu-toggle { display: none; position: absolute; top: 20px; right: 20px; flex-direction: column; justify-content: space-between; width: 30px; height: 21px; background: transparent; border: none; cursor: pointer; padding: 0; z-index: 1100; }
+.menu-toggle span { display: block; width: 100%; height: 3px; background-color: var(--color-texto-claro); transition: all 0.3s ease; }
+
+@media (max-width: 768px) {
+    /* Layout Móvil */
+    .navbar { position: fixed; top: 0; left: 0; width: 100%; height: 70px; flex-direction: row; justify-content: space-between; align-items: center; background: var(--color-fondo); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); border-bottom: 3px solid var(--color-acento-principal); padding: 0 15px; }
+    .navbar-logo { margin-bottom: 0; }
+    .navbar-logo img { height: 40px; }
+    .navbar-user-info { display: none; }
+    .main-content-wrapper { margin-left: 0; margin-top: 80px; width: 100%; padding: 15px; }
+    .menu-toggle { display: flex; right: 80px; top: 15px; }
+    .menu-toggle span { background-color: var(--color-acento-principal); }
+    .navbar-menu { display: none; position: absolute; top: 70px; left: 0; width: 100%; background-color: var(--color-fondo); flex-direction: column; align-items: center; padding: 20px 0; box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1); border-top: 1px solid var(--color-borde); z-index: 9999; }
+    .navbar-menu.active { display: flex; }
+    .nav-link, .dropbtn { color: var(--color-texto-oscuro) !important; width: 90%; text-align: center; padding: 15px; margin: 5px auto; }
+    .dropdown-content { position: relative; background-color: #f1f1f1; width: 100%; }
+    .dropdown-content a { color: var(--color-texto-oscuro); }
+
+    /* Estilos de Devolución Móvil */
+    .flex-row { flex-direction: column; }
+    .flex-row .input-padded { margin-bottom: 10px; }
+    .flex-row .btn-general { width: 100%; }
+    .sale-info { flex-direction: column; gap: 5px; }
+    .input-cant { width: 100%; }
+    .text-right { text-align: center; } /* Centrar el botón de procesar */
+}

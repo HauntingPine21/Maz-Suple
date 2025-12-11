@@ -18,12 +18,12 @@ if (!isset($_SESSION['carrito'])) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Maz Suplementos | Punto de Venta</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/ventas.css">
     <link rel="icon" type="image/png" href="assets/img/logo-mazsuplementos_icon.svg">
   </head>
 
   <body>
-    <div class="navbar">
+    <nav class="navbar">
         <div class="navbar-logo">
             <img src="assets/img/logo-mazsuplementos_v2.svg" alt="Logo Maz Suplementos">
         </div>
@@ -35,22 +35,20 @@ if (!isset($_SESSION['carrito'])) {
         </button>
 
         <div class="navbar-menu" id="navbar-menu">
-            <button onclick="sincronizarVentas()" class="btn-general">
+            <button onclick="sincronizarVentas()" class="btn-general w-full sync-btn">
                 Sincronizar (Offline)
             </button>
-
-            <div class="dropdown">
-                <button class="dropbtn">Cajero ▾</button>
-                <div class="dropdown-content">
-                    <a href="dashboard.php">Inicio</a>
-                    <a href="ventas.php">Punto de Venta</a>
-                    <a href="devoluciones.php">Devoluciones</a>
-                </div>
+            
+            <div class="navbar-links">
+                <a href="dashboard.php" class="nav-link">🏠 Inicio</a>
+                <a href="ventas.php" class="nav-link active">🛒 Punto de Venta</a>
+                <a href="devoluciones.php" class="nav-link">↩️ Devoluciones</a>
             </div>
 
             <?php if ($rol === 'admin'): ?>
+                <hr class="nav-divider">
                 <div class="dropdown">
-                    <button class="dropbtn">Gestión ▾</button>
+                    <button class="dropbtn">⚙️ Gestión ▾</button>
                     <div class="dropdown-content">
                         <a href="productos.php">Productos</a>
                         <a href="compras.php">Compras</a>
@@ -60,7 +58,7 @@ if (!isset($_SESSION['carrito'])) {
                 </div>
 
                 <div class="dropdown">
-                    <button class="dropbtn">Reportes ▾</button>
+                    <button class="dropbtn">📈 Reportes ▾</button>
                     <div class="dropdown-content">
                         <a href="reportes/compras.php">Compras</a>
                         <a href="reportes/devoluciones.php">Devoluciones</a>
@@ -70,16 +68,21 @@ if (!isset($_SESSION['carrito'])) {
                     </div>
                 </div>
             <?php endif; ?>
-
-            <a href="includes/logout.php" class="btn-general">Cerrar Sesión</a>
+            
+            <div class="navbar-user-info">
+                <span class="user-text">Cajero: 
+                    <strong><?php echo htmlspecialchars($cajero_nombre); ?></strong>
+                </span>
+                <a href="includes/logout.php" class="btn-logout">Cerrar Sesión</a>
+            </div>
         </div>
-    </div>
+    </nav>
 
-    <div class="main-container">
+    <main class="main-content-wrapper">
         <h2>Punto de Venta</h2>
         <p class="text-sm text-gray">Atendido por: <strong><?php echo htmlspecialchars($cajero_nombre); ?></strong></p>
 
-        <div class="flex-row mb-20">
+        <div class="search-bar mb-20">
             <input type="text" 
                 id="codigo" 
                 name="codigo"
@@ -89,35 +92,38 @@ if (!isset($_SESSION['carrito'])) {
             <button id="btn-buscar" class="btn-general w-150">Buscar</button>
         </div>
 
-        <div class="card">
+        <div class="card card-carrito">
             <h3>Carrito de Venta</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Producto</th>
-                        <th class="col-10">Cant.</th>
-                        <th class="col-15">Precio Unit.</th>
-                        <th class="col-15">Subtotal</th>
-                        <th class="col-5"></th>
-                    </tr>
-                </thead>
-                <tbody id="tabla-carrito">
-                    <tr>
-                        <td colspan="5" class="text-center-muted">Escanea un suplemento para comenzar...</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th class="col-10">Cant.</th>
+                            <th class="col-15 text-right">Precio Unit.</th>
+                            <th class="col-15 text-right">Subtotal</th>
+                            <th class="col-5"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-carrito">
+                        <tr>
+                            <td colspan="5" class="text-center-muted">Escanea un suplemento para comenzar...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
-        <div class="text-right text-2xl font-bold text-red mt-20">
-            Total: <span id="total-display">$0.00</span>
+        <div class="totals-area">
+            <div class="total-display">
+                Total: <span id="total-display">$0.00</span>
+            </div>
+            <div class="action-buttons">
+                <button id="btn-cancelar" class="btn-secundario">Cancelar Venta</button>
+                <button id="btn-cobrar" class="btn-general">Confirmar Venta y Cobrar</button>
+            </div>
         </div>
-
-        <div class="flex-row mt-15 flex-end-gap">
-            <button id="btn-cancelar" class="btn-general">Cancelar Venta</button>
-            <button id="btn-cobrar" class="btn-general">Confirmar Venta y Cobrar</button>
-        </div>
-    </div>
+    </main>
 
     <script src="js/main.js"></script>
     <script src="js/ventas.js"></script>

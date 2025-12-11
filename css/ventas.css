@@ -1,0 +1,273 @@
+/* ====================================================================
+    0. PALETA DE COLORES Y ESTRUCTURA GLOBAL
+==================================================================== */
+:root {
+    /* Colores del Tema (Blanco y Azul) */
+    --color-acento-principal: #007bff; /* Azul vibrante */
+    --color-acento-secundario: #0056b3; /* Azul marino/oscuro */
+    --color-fondo: #ffffff;
+    --color-borde: #dee2e6;
+    --color-texto-oscuro: #212529;
+    --color-texto-claro: #ffffff;
+    --color-error: #dc3545;
+    --color-exito: #28a745;
+
+    /* Variables del Layout Sidebar */
+    --sidebar-width: 250px;
+    --sidebar-color: #2c3e50; /* Azul oscuro para la barra lateral */
+    --main-bg: #f8f9fa;      /* Fondo de contenido principal (gris muy claro) */
+    --main-padding: 30px;
+}
+
+/* ====================================================================
+    1. LAYOUT (SIDEBAR Y CONTENIDO)
+==================================================================== */
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--main-bg);
+    margin: 0;
+    display: flex;
+    min-height: 100vh;
+    overflow-x: hidden;
+    color: var(--color-texto-oscuro);
+}
+
+/* Contenedor Principal de Contenido */
+.main-content-wrapper {
+    margin-left: var(--sidebar-width);
+    padding: var(--main-padding);
+    flex-grow: 1;
+    width: calc(100% - var(--sidebar-width));
+    box-sizing: border-box;
+    padding-top: 40px; 
+}
+
+/* ====================================================================
+    2. BARRA DE NAVEGACIÓN LATERAL (.navbar)
+==================================================================== */
+.navbar {
+    position: fixed; top: 0; left: 0; width: var(--sidebar-width); height: 100vh;
+    background: var(--sidebar-color);
+    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000; display: flex; flex-direction: column; 
+    align-items: center; padding: 20px 10px; box-sizing: border-box;
+}
+
+.navbar-logo { margin-bottom: 25px; }
+.navbar-logo img { max-height: 50px; }
+
+/* Menú Principal */
+.navbar-menu { display: flex; flex-direction: column; width: 100%; flex-grow: 1; }
+.navbar-links { width: 100%; margin-bottom: 10px; }
+
+.sync-btn { 
+    margin-bottom: 15px;
+    background: var(--color-exito); /* Botón de Sincronización en verde para diferenciar */
+}
+.sync-btn:hover { background: #1e7e34; }
+
+.nav-link, .dropbtn {
+    display: block; margin: 5px 0; padding: 12px 15px; text-decoration: none;
+    font-weight: 600; color: var(--color-texto-claro) !important;
+    border-radius: 6px; transition: background-color 0.2s;
+    text-align: left; width: 100%; box-sizing: border-box;
+    background-color: transparent;
+}
+.nav-link.active { background-color: var(--color-acento-principal); }
+.nav-link:hover, .dropbtn:hover { background-color: var(--color-acento-principal); }
+
+/* Dropdown */
+.dropdown { position: relative; width: 100%; margin-bottom: 10px; }
+.dropdown-content {
+    display: none; position: relative; background-color: #3e5265;
+    width: 100%; padding: 5px 0; border-radius: 0 0 6px 6px;
+}
+.dropdown:hover .dropdown-content { display: block; }
+
+.dropdown-content a {
+    padding: 8px 15px 8px 30px; 
+    font-size: 14px; font-weight: 400;
+    color: var(--color-texto-claro);
+}
+.dropdown-content a:hover { background-color: var(--color-acento-secundario); }
+
+.nav-divider { border: 0; border-top: 1px solid #455a64; width: 80%; margin: 15px auto; }
+
+/* Información de Usuario y Logout (Pie del Sidebar) */
+.navbar-user-info {
+    margin-top: auto; 
+    width: 100%;
+    padding-top: 15px;
+    border-top: 1px solid #455a64;
+    text-align: center;
+}
+.navbar-user-info .user-text {
+    display: block; color: var(--color-borde); margin-bottom: 8px; font-size: 0.9em;
+}
+.btn-logout { 
+    background: var(--color-error);
+    color: var(--color-texto-claro) !important;
+    padding: 8px 15px;
+    border-radius: 6px;
+    display: inline-block;
+    width: 90%;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+}
+.btn-logout:hover { background: #b02a37; }
+
+/* ====================================================================
+    3. ESTILOS DEL PUNTO DE VENTA (TPV)
+==================================================================== */
+
+h2 { color: var(--color-texto-oscuro); margin-bottom: 5px; }
+.text-gray { color: #555; }
+
+/* Barra de Búsqueda */
+.search-bar { 
+    display: flex; gap: 10px; align-items: center; 
+    padding: 10px 0; 
+    border-bottom: 2px solid var(--color-acento-principal);
+}
+.search-bar input {
+    width: 100%; padding: 12px; margin: 0; /* Anulamos el margin-bottom de los inputs generales */
+    border: 1px solid var(--color-borde); border-radius: 6px;
+    font-size: 16px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+.search-bar input:focus { 
+    border-color: var(--color-acento-principal);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+/* Tarjeta y Tabla de Carrito */
+.card-carrito {
+    background: var(--color-fondo);
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+}
+.card-carrito h3 { color: var(--color-acento-secundario); margin-top: 0; }
+
+table {
+    width: 100%; border-collapse: collapse; margin-top: 15px;
+    border: 1px solid var(--color-borde); border-radius: 8px;
+    overflow: hidden;
+}
+th { background: #e9ecef; color: var(--color-texto-oscuro); }
+th, td { padding: 12px; border-bottom: 1px solid #eee; font-size: 15px; }
+
+/* Columnas de Tabla */
+.col-10 { width: 10%; } .col-15 { width: 15%; } .col-5 { width: 5%; }
+.text-right { text-align: right; }
+.text-center-muted { text-align: center; color: #888; font-style: italic; }
+
+/* Totales y Botones de Acción */
+.totals-area {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    margin-top: 20px;
+    border-top: 2px solid var(--color-borde);
+}
+.total-display {
+    font-size: 2em;
+    font-weight: bold;
+    color: var(--color-acento-secundario); /* Azul oscuro para el total */
+}
+#total-display {
+    color: var(--color-error); /* Rojo para resaltar el monto total */
+}
+.action-buttons {
+    display: flex;
+    gap: 15px;
+}
+
+/* Botones de Acción TPV */
+.btn-general {
+    background: var(--color-acento-principal);
+    color: var(--color-texto-claro) !important;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+    text-decoration: none;
+}
+.btn-general:hover { background: var(--color-acento-secundario); }
+
+.btn-secundario {
+    /* Estilo para el botón Cancelar Venta */
+    background: #6c757d;
+    color: var(--color-texto-claro) !important;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.btn-secundario:hover { background: #5a6268; }
+
+.w-150 { width: 150px; }
+
+/* ====================================================================
+    4. RESPONSIVE (Móvil)
+==================================================================== */
+.menu-toggle {
+    display: none; position: absolute; top: 20px; right: 20px;
+    flex-direction: column; justify-content: space-between;
+    width: 30px; height: 21px; background: transparent; border: none;
+    cursor: pointer; padding: 0; z-index: 1100;
+}
+.menu-toggle span { display: block; width: 100%; height: 3px; background-color: var(--color-texto-claro); transition: all 0.3s ease; }
+
+@media (max-width: 992px) {
+    /* Ajuste para pantallas medianas, especialmente el total */
+    .totals-area { flex-direction: column; align-items: flex-end; gap: 15px; }
+    .total-display { font-size: 1.8em; }
+}
+
+@media (max-width: 768px) {
+    /* Layout Móvil */
+    .navbar {
+        position: fixed; top: 0; left: 0; width: 100%; height: 70px;
+        flex-direction: row; justify-content: space-between; align-items: center;
+        background: var(--color-fondo); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        border-bottom: 3px solid var(--color-acento-principal); padding: 0 15px;
+    }
+    .navbar-logo { margin-bottom: 0; }
+    .navbar-logo img { height: 40px; }
+    .navbar-user-info { display: none; } /* Ocultar info de usuario en la navbar móvil */
+
+    .main-content-wrapper { margin-left: 0; margin-top: 80px; width: 100%; padding: 15px; }
+
+    /* Menú Hamburguesa */
+    .menu-toggle { display: flex; right: 80px; top: 15px; }
+    .menu-toggle span { background-color: var(--color-acento-principal); }
+
+    .navbar-menu {
+        display: none; position: absolute; top: 70px; left: 0; width: 100%;
+        background-color: var(--color-fondo); flex-direction: column; align-items: center;
+        padding: 20px 0; box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        border-top: 1px solid var(--color-borde); z-index: 9999;
+    }
+    .navbar-menu.active { display: flex; }
+
+    /* Estilos del TPV en Móvil */
+    .search-bar { flex-direction: column; }
+    .search-bar input { margin-bottom: 10px; }
+    .search-bar .btn-general { width: 100%; }
+    
+    .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table { min-width: 600px; } /* Evita que la tabla se rompa */
+    
+    .totals-area { flex-direction: column-reverse; align-items: stretch; }
+    .total-display { text-align: right; font-size: 1.5em; }
+    .action-buttons { flex-direction: column; gap: 10px; }
+    .action-buttons button { width: 100%; }
+}

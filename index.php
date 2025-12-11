@@ -1,6 +1,6 @@
 <?php
 // index.php
-session_start(); // NECESARIO: Iniciar sesión para recibir mensajes de error de auth.php
+session_start(); 
 
 // Verificar si hay algún mensaje de error guardado (ej: "Contraseña incorrecta")
 $error = '';
@@ -16,9 +16,8 @@ if (isset($_SESSION['error_mensaje'])) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>María de Letras | Iniciar sesión</title>
-    <link rel="stylesheet" href="css/styles.css"> 
+    <link rel="stylesheet" href="css/index.css"> 
     <link rel="icon" type="image/png" href="assets/img/logo-maria-de-letras_icon.svg">
-    <link rel="stylesheet" href="../css/styles.css">
   </head>
 
   <body>
@@ -58,7 +57,7 @@ if (isset($_SESSION['error_mensaje'])) {
               class="input-padded">
           </div>
         </div>
-        <button type="submit" class="btn-general">
+        <button type="submit" class="btn-general w-full mt-15">
           Ingresar
         </button>
       </form>

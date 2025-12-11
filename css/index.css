@@ -1,0 +1,136 @@
+/* ====================================================================
+    PALETA DE COLORES (Blanco y Azul)
+==================================================================== */
+:root {
+    --color-acento-principal: #007bff; /* Azul vibrante */
+    --color-acento-secundario: #0056b3; /* Azul marino/oscuro */
+    --color-fondo: #ffffff;
+    --color-borde: #dee2e6;
+    --color-texto-oscuro: #212529;
+    --color-texto-claro: #ffffff;
+    --color-error: #dc3545; /* Rojo de error */
+}
+
+/* ====================================================================
+    ESTRUCTURA GLOBAL
+==================================================================== */
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    /* Fondo limpio: Degradado azul muy suave */
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Centrado vertical */
+    min-height: 100vh;
+    color: var(--color-texto-oscuro);
+}
+
+/* ====================================================================
+    CONTENEDOR DE LOGIN
+==================================================================== */
+
+.container-login {
+    background: var(--color-fondo);
+    border-radius: 12px;
+    box-sizing: border-box;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* Sombra más profunda */
+    width: 100%;
+    max-width: 450px; /* Tamaño profesional */
+    text-align: center;
+    border-top: 6px solid var(--color-acento-principal); /* Borde de acento azul */
+}
+
+.logo img {
+    max-height: 100px; /* Ajuste para el logo */
+    margin-bottom: 10px;
+}
+
+.container-login h2 {
+    color: var(--color-texto-oscuro);
+    font-size: 1.8em;
+    margin-top: 10px;
+    margin-bottom: 25px;
+}
+
+/* ====================================================================
+    FORMULARIO Y ENTRADAS
+==================================================================== */
+
+.form-index { 
+    text-align: left; 
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-texto-oscuro);
+}
+
+.input-padded {
+    /* Clase utilizada en el PHP para inputs de ancho completo */
+    width: 100%; 
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid var(--color-borde);
+    border-radius: 8px;
+    font-size: 16px;
+    transition: 0.2s;
+    box-sizing: border-box;
+    background-color: #f9f9f9; /* Fondo muy ligero para el input */
+}
+
+.input-padded:focus {
+    border-color: var(--color-acento-principal);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    background-color: var(--color-fondo);
+}
+
+/* ====================================================================
+    BOTONES Y ALERTAS
+==================================================================== */
+
+.btn-general {
+    /* Estilo del botón (Azul principal) */
+    background: var(--color-acento-principal);
+    color: var(--color-texto-claro) !important;
+    padding: 12px 18px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    text-transform: uppercase;
+}
+
+.btn-general:hover {
+    background: var(--color-acento-secundario);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+}
+
+/* Alerta de Error */
+.alert-custom-danger {
+    background: #f8d7da;
+    color: var(--color-error);
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    border: 1px solid #f5c6cb;
+    font-weight: 600;
+}
+
+/* ====================================================================
+    UTILIDADES
+==================================================================== */
+
+.text-center { text-align: center; }
+.mb-15 { margin-bottom: 15px; }
+.mt-15 { margin-top: 15px; }
+.w-full { width: 100%; }

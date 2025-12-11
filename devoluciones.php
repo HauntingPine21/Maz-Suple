@@ -34,10 +34,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['folio_input'])) {
         // 2. BUSCAR DETALLES + LIBROS + CODIGOS
         // ======================================
         $sql_d = "SELECT dv.id_libro, dv.cantidad, dv.precio_unitario, dv.importe,
-                         l.titulo, l.codigo
-                  FROM detalle_ventas dv
-                  JOIN libros l ON dv.id_libro = l.id
-                  WHERE dv.id_venta = $id_venta_encontrada";
+                      l.titulo, l.codigo
+              FROM detalle_ventas dv
+              JOIN libros l ON dv.id_libro = l.id
+              WHERE dv.id_venta = $id_venta_encontrada";
 
         $res_d = $mysqli->query($sql_d);
 
@@ -56,13 +56,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['folio_input'])) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>María de Letras | Devoluciones</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/devoluciones.css">
     <link rel="icon" type="image/png" href="assets/img/logo-maria-de-letras_icon.svg">
 </head>
 
 <body>
 
-<div class="navbar">
+<nav class="navbar">
     <div class="navbar-logo">
         <img src="assets/img/logo-maria-de-letras_v2.svg" alt="Logo">
     </div>
@@ -72,27 +72,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['folio_input'])) {
     </button>
 
     <div class="navbar-menu" id="navbar-menu">
-        <div class="dropdown">
-            <button class="dropbtn">Cajero ▾</button>
-            <div class="dropdown-content">
-                <a href="dashboard.php">Inicio</a>
-                <a href="ventas.php">Punto de Venta</a>
-                <a href="devoluciones.php">Devoluciones</a>
-            </div>
+        <div class="navbar-links">
+            <a href="dashboard.php" class="nav-link">🏠 Inicio</a>
+            <a href="ventas.php" class="nav-link">🛒 Punto de Venta</a>
+            <a href="devoluciones.php" class="nav-link active">↩️ Devoluciones</a>
         </div>
-
+        
         <?php if ($rol === 'admin'): ?>
+        <hr class="nav-divider">
         <div class="dropdown">
-            <button class="dropbtn">Gestión ▾</button>
+            <button class="dropbtn">⚙️ Gestión ▾</button>
             <div class="dropdown-content">
                 <a href="productos.php">Productos</a>
                 <a href="compras.php">Compras</a>
                 <a href="usuarios.php">Usuarios</a>
-            </div>
+                </div>
         </div>
 
         <div class="dropdown">
-            <button class="dropbtn">Reportes ▾</button>
+            <button class="dropbtn">📈 Reportes ▾</button>
             <div class="dropdown-content">
                 <a href="reportes/compras.php">Reportes Compra</a>
                 <a href="reportes/devoluciones.php">Reportes Devoluciones</a>
@@ -103,11 +101,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['folio_input'])) {
         </div>
         <?php endif; ?>
 
-        <a href="includes/logout.php" class="btn-general">Cerrar Sesión</a>
+        <div class="navbar-user-info">
+            <span class="user-text">Cajero: 
+                <strong><?php echo htmlspecialchars($_SESSION['user']['nombre']); ?></strong>
+            </span>
+            <a href="includes/logout.php" class="btn-logout">Cerrar Sesión</a>
+        </div>
     </div>
-</div>
+</nav>
 
-<div class="main-container">
+<main class="main-content-wrapper">
     <h2>Gestión de Devoluciones</h2>
 
     <?php if (!empty($mensaje_error)): ?>
@@ -116,16 +119,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['folio_input'])) {
         </div>
     <?php endif; ?>
 
-    <div class="card mb-20">
+    <div class="card mb-20 card-search">
         <h3>Buscar Venta por Folio</h3>
 
-        <form method="POST">
+        <form method="POST" class="form-search">
             <div class="flex-row">
                 <input type="text" name="folio_input"
                        placeholder="Ingresa Folio (Ej: 1001)"
                        required
                        value="<?= isset($_POST['folio_input']) ? htmlspecialchars($_POST['folio_input']) : '' ?>"
-                       class="flex-grow w-auto">
+                       class="flex-grow w-auto input-padded">
 
                 <button class="btn-general w-150">Buscar Venta</button>
             </div>
@@ -134,69 +137,78 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['folio_input'])) {
 
 <?php if ($venta_encontrada): ?>
 
-<div class="card mt-20">
-    <h3>Venta Encontrada (#<?= $venta_encontrada['id'] ?>)</h3>
+<div class="card mt-20 card-details">
+    <h3>Detalles de Venta (#<?= $venta_encontrada['id'] ?>)</h3>
 
-    <p>
-        Fecha: <strong><?= date('d/m/Y H:i', strtotime($venta_encontrada['fecha_hora'])) ?></strong> |
-        Total Venta: <strong>$<?= number_format($venta_encontrada['total'], 2) ?></strong> |
-        Cajero: <strong><?= htmlspecialchars($venta_encontrada['cajero']) ?></strong>
-    </p>
+    <div class="sale-info">
+        <span>
+            Fecha: <strong><?= date('d/m/Y H:i', strtotime($venta_encontrada['fecha_hora'])) ?></strong>
+        </span>
+        <span>
+            Total Venta: <strong class="text-error">$<?= number_format($venta_encontrada['total'], 2) ?></strong>
+        </span>
+        <span>
+            Cajero: <strong><?= htmlspecialchars($venta_encontrada['cajero']) ?></strong>
+        </span>
+    </div>
 
-    <hr>
+    <hr class="divider">
 
     <form id="form-devolucion">
         <input type="hidden" id="venta_id_origen" value="<?= $venta_encontrada['id'] ?>">
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Devolver</th>
-                    <th>Producto</th>
-                    <th>Código</th>
-                    <th>Cant. Vendida</th>
-                    <th>Cant. a Devolver</th>
-                    <th>Precio Unitario</th>
-                </tr>
-            </thead>
-            <tbody>
-            <?php foreach ($detalles_venta as $item): ?>
-                <tr>
-                    <td class="text-center">
-                        <input type="checkbox" class="check-devolucion"
-                               data-id="<?= $item['id_libro'] ?>">
-                    </td>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="col-dev">Devolver</th>
+                        <th>Producto</th>
+                        <th>Código</th>
+                        <th class="col-cant">Cant. Vendida</th>
+                        <th class="col-cant">Cant. a Devolver</th>
+                        <th class="col-precio text-right">Precio Unitario</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($detalles_venta as $item): ?>
+                    <tr>
+                        <td class="text-center">
+                            <input type="checkbox" class="check-devolucion"
+                                   data-id="<?= $item['id_libro'] ?>">
+                        </td>
 
-                    <td><?= htmlspecialchars($item['titulo']) ?></td>
-                    <td><?= htmlspecialchars($item['codigo']) ?></td>
+                        <td><?= htmlspecialchars($item['titulo']) ?></td>
+                        <td><?= htmlspecialchars($item['codigo']) ?></td>
 
-                    <td class="text-center"><?= $item['cantidad'] ?></td>
+                        <td class="text-center"><?= $item['cantidad'] ?></td>
 
-                    <td class="text-center">
-                        <input type="number"
-                               id="cant_<?= $item['id_libro'] ?>"
-                               min="1"
-                               max="<?= $item['cantidad'] ?>"
-                               value="1"
-                               disabled>
-                    </td>
+                        <td class="text-center">
+                            <input type="number"
+                                   id="cant_<?= $item['id_libro'] ?>"
+                                   min="1"
+                                   max="<?= $item['cantidad'] ?>"
+                                   value="1"
+                                   class="input-cant"
+                                   disabled>
+                        </td>
 
-                    <td class="text-right">$<?= number_format($item['precio_unitario'], 2) ?></td>
-                </tr>
-            <?php endforeach; ?>
-            </tbody>
-        </table>
+                        <td class="text-right">$<?= number_format($item['precio_unitario'], 2) ?></td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
 
-        <div class="mt-15">
+        <div class="form-group mt-15">
             <label for="motivo_devolucion">Motivo de la Devolución</label>
             <input type="text" id="motivo_devolucion"
-                   placeholder="Ej: Defecto de fabricación..."
-                   class="w-full">
+                   placeholder="Ej: Defecto de fabricación, cambio de opinión, etc."
+                   class="w-full input-padded">
         </div>
 
         <div class="text-right">
             <button type="button" id="btn-procesar-devolucion"
-                    class="btn-general mt-15">
+                    class="btn-general mt-15 btn-error-action">
                 Procesar Devolución Seleccionada
             </button>
         </div>
@@ -204,10 +216,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['folio_input'])) {
 </div>
 
 <?php endif; ?>
-</div>
+</main>
 
 <script src="js/main.js"></script>
-
 <script>
 // Habilitar input si el checkbox está marcado
 document.querySelectorAll('.check-devolucion').forEach(ch => {
@@ -263,7 +274,7 @@ if (btn) {
 // MANEJO DE FOLIOS OFFLINE
 document.addEventListener("DOMContentLoaded", () => {
 
-    const form = document.querySelector("form");
+    const form = document.querySelector(".form-search"); // Clase cambiada
     const input = document.querySelector('input[name="folio_input"]');
 
     form.addEventListener("submit", async (e) => {
