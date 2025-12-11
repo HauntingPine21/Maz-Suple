@@ -1,95 +1,86 @@
 <?php
+// ajax/confirmar_compra.php
 session_start();
 require_once '../config/db.php';
 require_once '../includes/functions.php';
 
-header('Content-Type: application/json');
-
-// Validar usuario logueado
-if (!isset($_SESSION['user'])) {
-    echo json_encode(['status' => 'error', 'msg' => 'No autorizado']);
-    exit;
+// Solo método POST
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    json_response(['status' => 'error', 'msg' => 'Método no permitido'], 405);
 }
 
-// Recibir JSON
+// Leer JSON del body
 $input = json_decode(file_get_contents('php://input'), true);
 
-if (!$input || empty($input['proveedor']) || empty($input['items'])) {
-    echo json_encode(['status' => 'error', 'msg' => 'Datos de compra incompletos']);
-    exit;
+if (!$input || !isset($input['id_proveedor'], $input['items'])) {
+    json_response(['status' => 'error', 'msg' => 'Datos incompletos'], 400);
 }
 
-$id_usuario   = $_SESSION['user']['id'];
-$id_proveedor = intval($input['proveedor']);
-$items        = $input['items']; // Array de {id_suplemento, cantidad, costo}
+$id_proveedor = intval($input['id_proveedor']);
+$items = $input['items'];
+$usuario_id = $_SESSION['user']['id'] ?? 0;
 
-$total_compra = 0;
-foreach ($items as $item) {
-    if (!isset($item['id_suplemento'], $item['cantidad'], $item['costo'])) {
-        echo json_encode(['status' => 'error', 'msg' => 'Item incompleto en la compra']);
-        exit;
+// Validar proveedor
+$res = $mysqli->query("SELECT id_proveedor FROM proveedores WHERE id_proveedor = $id_proveedor AND estatus = 1");
+if (!$res || $res->num_rows === 0) {
+    json_response(['status' => 'error', 'msg' => 'Proveedor no válido']);
+}
+
+// Validar items
+if (count($items) === 0) {
+    json_response(['status' => 'error', 'msg' => 'No hay suplementos para registrar']);
+}
+
+foreach ($items as $i => $item) {
+    if (!isset($item['id_producto'], $item['cantidad'], $item['costo'])) {
+        json_response(['status' => 'error', 'msg' => "Item $i incompleto"]);
     }
-    $total_compra += $item['cantidad'] * $item['costo'];
+    if ($item['cantidad'] <= 0 || $item['costo'] < 0) {
+        json_response(['status' => 'error', 'msg' => "Item $i con valores inválidos"]);
+    }
 }
 
+// Comenzar transacción
 $mysqli->begin_transaction();
-
 try {
+    // Insertar encabezado de compra
+    $fecha = date('Y-m-d H:i:s');
+    $total = 0;
+    foreach ($items as $item) {
+        $total += $item['cantidad'] * $item['costo'];
+    }
 
-    // 1. Insertar compra
-    $sql_compra = "INSERT INTO compras (id_proveedor, id_usuario, total_compra, fecha_hora)
-                   VALUES (?, ?, ?, NOW())";
-    $stmt = $mysqli->prepare($sql_compra);
-    $stmt->bind_param("iid", $id_proveedor, $id_usuario, $total_compra);
+    $stmt = $mysqli->prepare("INSERT INTO compras (id_proveedor, id_usuario, fecha, total) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("iisd", $id_proveedor, $usuario_id, $fecha, $total);
     $stmt->execute();
     $id_compra = $mysqli->insert_id;
 
-    // 2. Insertar detalle y actualizar existencias
-    $sql_det = "INSERT INTO detalle_compras (id_compra, id_suplemento, cantidad, costo_unitario)
-                VALUES (?, ?, ?, ?)";
-    $stmt_det = $mysqli->prepare($sql_det);
+    // Insertar detalle y actualizar stock
+    $stmt_detalle = $mysqli->prepare("INSERT INTO detalle_compras (id_compra, id_suplemento, cantidad, costo, subtotal) VALUES (?, ?, ?, ?, ?)");
+    $stmt_stock = $mysqli->prepare("UPDATE existencias SET cantidad = cantidad + ? WHERE id_suplemento = ?");
 
-    // Stock
-    $sql_upd = "UPDATE existencias SET cantidad = cantidad + ? WHERE id_suplemento = ?";
-    $stmt_upd = $mysqli->prepare($sql_upd);
+    foreach ($items as $item) {
+        $subtotal = $item['cantidad'] * $item['costo'];
 
-    // Crear existencias si no existen
-    $sql_check_stock = "SELECT id FROM existencias WHERE id_suplemento = ?";
-    $stmt_check = $mysqli->prepare($sql_check_stock);
+        $stmt_detalle->bind_param("iiidd", $id_compra, $item['id_producto'], $item['cantidad'], $item['costo'], $subtotal);
+        $stmt_detalle->execute();
 
-    $sql_insert_stock = "INSERT INTO existencias (id_suplemento, cantidad) VALUES (?, ?)";
-    $stmt_insert_stock = $mysqli->prepare($sql_insert_stock);
-
-    foreach ($items as $prod) {
-        $id_sup   = intval($prod['id_suplemento']);
-        $cant     = intval($prod['cantidad']);
-        $costo    = floatval($prod['costo']);
-
-        // Insertar detalle
-        $stmt_det->bind_param("iiid", $id_compra, $id_sup, $cant, $costo);
-        $stmt_det->execute();
-
-        // Verificar si existen existencias
-        $stmt_check->bind_param("i", $id_sup);
-        $stmt_check->execute();
-        $result = $stmt_check->get_result();
-
-        if ($result->num_rows == 0) {
-            // Crear registro de stock
-            $stmt_insert_stock->bind_param("ii", $id_sup, $cant);
-            $stmt_insert_stock->execute();
-        } else {
-            // Actualizar stock existente
-            $stmt_upd->bind_param("ii", $cant, $id_sup);
-            $stmt_upd->execute();
-        }
+        $stmt_stock->bind_param("ii", $item['cantidad'], $item['id_producto']);
+        $stmt_stock->execute();
     }
 
     $mysqli->commit();
-    echo json_encode(['status' => 'ok', 'msg' => 'Compra registrada', 'folio' => $id_compra]);
+    json_response(['status' => 'ok', 'folio' => $id_compra]);
 
 } catch (Exception $e) {
     $mysqli->rollback();
-    echo json_encode(['status' => 'error', 'msg' => 'Error en compra: ' . $e->getMessage()]);
+    json_response(['status' => 'error', 'msg' => $e->getMessage()]);
 }
-?>
+
+// Función auxiliar para JSON
+function json_response($arr, $code = 200) {
+    http_response_code($code);
+    header('Content-Type: application/json');
+    echo json_encode($arr);
+    exit;
+}
