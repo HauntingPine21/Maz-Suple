@@ -66,11 +66,42 @@ body {
 .nav-link:hover, .dropbtn:hover { background-color: var(--color-acento-principal); }
 
 /* Dropdown */
-.dropdown { position: relative; width: 100%; margin-bottom: 10px; }
-.dropdown-content { display: none; position: relative; background-color: #3e5265; width: 100%; padding: 5px 0; border-radius: 0 0 6px 6px; }
+.dropdown { 
+    position: relative; 
+    width: 100%; 
+    margin-bottom: 10px; 
+}
+
+.dropdown-content {
+    display: none; 
+    position: relative; 
+    background-color: #3e5265;
+    /* QUITAMOS EL PADDING VERTICAL DEL CONTENEDOR */
+    width: 100%; 
+    padding: 0; 
+    border-radius: 0 0 6px 6px;
+    /* AJUSTE PARA ORDENAR MEJOR EL CONTENIDO */
+    overflow: hidden; 
+}
 .dropdown:hover .dropdown-content, .dropdown-content.show { display: block; }
-.dropdown-content a { padding: 8px 15px 8px 30px; font-size: 14px; font-weight: 400; color: var(--color-texto-claro); }
-.dropdown-content a:hover, .dropdown-content a.active { background-color: var(--color-acento-secundario); }
+
+.dropdown-content a {
+    /* CLAVE: FUERZA EL TEXTO A NO ROMPERSE EN LÍNEAS */
+    white-space: nowrap; 
+    /* CLAVE: ASEGURA QUE CADA ENLACE OCUPE SU PROPIA LÍNEA COMPLETA */
+    display: block; 
+    
+    padding: 10px 15px 10px 30px; /* AUMENTAMOS LIGERAMENTE EL PADDING VERTICAL (10px) */
+    font-size: 14px; 
+    font-weight: 400;
+    color: var(--color-texto-claro);
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.dropdown-content a:hover, .dropdown-content a.active { 
+    background-color: var(--color-acento-secundario); 
+}
 
 /* Info y Logout */
 .navbar-user-info { margin-top: auto; width: 100%; padding-top: 15px; border-top: 1px solid #455a64; text-align: center; }

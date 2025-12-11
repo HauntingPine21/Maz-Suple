@@ -99,7 +99,7 @@ $productos = $mysqli->query($sql_suplementos);
 <head>
     <meta charset="UTF-8">
     <title>Maz Suple | Gestión de Productos</title>
-    <link rel="stylesheet" href="css/productos.css">
+    <link rel="stylesheet" href="css/productos.css?v=<?php echo time(); ?>">
 </head>
 <body>
     

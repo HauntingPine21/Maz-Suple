@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['folio_input'])) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>María de Letras | Devoluciones</title>
-    <link rel="stylesheet" href="css/devoluciones.css">
+    <link rel="stylesheet" href="css/devoluciones.css?v=<?php echo time(); ?>">
     <link rel="icon" type="image/png" href="assets/img/logo-maria-de-letras_icon.svg">
 </head>
 

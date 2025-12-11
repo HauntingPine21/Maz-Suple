@@ -20,7 +20,7 @@
 }
 
 /* ====================================================================
-    1. LAYOUT (SIDEBAR Y CONTENIDO) - IDÉNTICO A VENTAS Y DASHBOARD
+1. LAYOUT (SIDEBAR Y CONTENIDO)
 ==================================================================== */
 body {
     font-family: Arial, Helvetica, sans-serif;
@@ -32,6 +32,7 @@ body {
     color: var(--color-texto-oscuro);
 }
 
+/* Contenedor Principal de Contenido */
 .main-content-wrapper {
     margin-left: var(--sidebar-width);
     padding: var(--main-padding);
@@ -41,40 +42,102 @@ body {
     padding-top: 40px; 
 }
 
-/* SIDEBAR Y MENÚ */
+/* ====================================================================
+    2. BARRA DE NAVEGACIÓN LATERAL (.navbar)
+==================================================================== */
 .navbar {
     position: fixed; top: 0; left: 0; width: var(--sidebar-width); height: 100vh;
-    background: var(--sidebar-color); box-shadow: 4px 0 10px rgba(0, 0, 0, 0.2);
+    background: var(--sidebar-color);
+    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.2);
     z-index: 1000; display: flex; flex-direction: column; 
     align-items: center; padding: 20px 10px; box-sizing: border-box;
 }
+
 .navbar-logo { margin-bottom: 25px; }
 .navbar-logo img { max-height: 50px; }
+
+/* Menú Principal */
 .navbar-menu { display: flex; flex-direction: column; width: 100%; flex-grow: 1; }
 .navbar-links { width: 100%; margin-bottom: 10px; }
-.nav-divider { border: 0; border-top: 1px solid #455a64; width: 80%; margin: 15px auto; }
+
+.sync-btn { 
+    margin-bottom: 15px;
+    background: var(--color-exito); /* Botón de Sincronización en verde para diferenciar */
+}
+.sync-btn:hover { background: #1e7e34; }
 
 .nav-link, .dropbtn {
     display: block; margin: 5px 0; padding: 12px 15px; text-decoration: none;
     font-weight: 600; color: var(--color-texto-claro) !important;
     border-radius: 6px; transition: background-color 0.2s;
     text-align: left; width: 100%; box-sizing: border-box;
-    background-color: transparent; border: none;
+    background-color: transparent;
 }
 .nav-link.active { background-color: var(--color-acento-principal); }
 .nav-link:hover, .dropbtn:hover { background-color: var(--color-acento-principal); }
 
 /* Dropdown */
-.dropdown { position: relative; width: 100%; margin-bottom: 10px; }
-.dropdown-content { display: none; position: relative; background-color: #3e5265; width: 100%; padding: 5px 0; border-radius: 0 0 6px 6px; }
-.dropdown:hover .dropdown-content { display: block; }
-.dropdown-content a { padding: 8px 15px 8px 30px; font-size: 14px; font-weight: 400; color: var(--color-texto-claro); }
-.dropdown-content a:hover { background-color: var(--color-acento-secundario); }
+.dropdown { 
+    position: relative; 
+    width: 100%; 
+    margin-bottom: 10px; 
+}
 
-/* Info y Logout */
-.navbar-user-info { margin-top: auto; width: 100%; padding-top: 15px; border-top: 1px solid #455a64; text-align: center; }
-.navbar-user-info .user-text { display: block; color: var(--color-borde); margin-bottom: 8px; font-size: 0.9em; }
-.btn-logout { background: var(--color-error); color: var(--color-texto-claro) !important; padding: 8px 15px; border-radius: 6px; display: inline-block; width: 90%; text-decoration: none; font-size: 14px; font-weight: 600; }
+.dropdown-content {
+    display: none; 
+    position: relative; 
+    background-color: #3e5265;
+    /* QUITAMOS EL PADDING VERTICAL DEL CONTENEDOR */
+    width: 100%; 
+    padding: 0; 
+    border-radius: 0 0 6px 6px;
+    /* AJUSTE PARA ORDENAR MEJOR EL CONTENIDO */
+    overflow: hidden; 
+}
+.dropdown:hover .dropdown-content, .dropdown-content.show { display: block; }
+
+.dropdown-content a {
+    /* CLAVE: FUERZA EL TEXTO A NO ROMPERSE EN LÍNEAS */
+    white-space: nowrap; 
+    /* CLAVE: ASEGURA QUE CADA ENLACE OCUPE SU PROPIA LÍNEA COMPLETA */
+    display: block; 
+    
+    padding: 10px 15px 10px 30px; /* AUMENTAMOS LIGERAMENTE EL PADDING VERTICAL (10px) */
+    font-size: 14px; 
+    font-weight: 400;
+    color: var(--color-texto-claro);
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.dropdown-content a:hover, .dropdown-content a.active { 
+    background-color: var(--color-acento-secundario); 
+}
+
+.nav-divider { border: 0; border-top: 1px solid #455a64; width: 80%; margin: 15px auto; }
+
+/* Información de Usuario y Logout (Pie del Sidebar) */
+.navbar-user-info {
+    margin-top: auto; 
+    width: 100%;
+    padding-top: 15px;
+    border-top: 1px solid #455a64;
+    text-align: center;
+}
+.navbar-user-info .user-text {
+    display: block; color: var(--color-borde); margin-bottom: 8px; font-size: 0.9em;
+}
+.btn-logout { 
+    background: var(--color-error);
+    color: var(--color-texto-claro) !important;
+    padding: 8px 15px;
+    border-radius: 6px;
+    display: inline-block;
+    width: 90%;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+}
 .btn-logout:hover { background: #b02a37; }
 
 

@@ -40,7 +40,7 @@ $suplementos_json = json_encode($suplementos);
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>MazSuple | Órdenes de Compra</title>
-    <link rel="stylesheet" href="css/compras.css">
+    <link rel="stylesheet" href="css/compras.css?v=<?php echo time(); ?>">
     <link rel="icon" type="image/png" href="assets/img/logo-mazsuplementos_icon.svg">
 </head>
 <body>
