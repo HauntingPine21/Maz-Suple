@@ -1,10 +1,9 @@
 <?php
 // ============================================================
-// RESPONSABLE: Vista de Reporte de Inventario con filtros.
-// REQUERIMIENTO: "Reporte 3.1 Inventario actual... Filtros: q, solo activos"
+// REPORTE DE INVENTARIO PARA SUPLEMENTOS
 // ============================================================
 require_once '../config/db.php';
-require_once '../includes/security_guardr.php';
+require_once '../includes/security_guard.php';
 
 // ------------------------
 // 1. Recibir filtros
@@ -18,24 +17,25 @@ $filtro_stock = $_GET['stock'] ?? 'todos';
 // ------------------------
 $sql = "
     SELECT 
-        l.codigo,
-        l.titulo AS nombre,
-        l.precio_venta AS precio,
+        s.codigo,
+        s.nombre,
+        s.precio_venta AS precio,
         e.cantidad AS existencia,
-        l.estatus
-    FROM libros l
-    JOIN existencias e ON l.id = e.id_libro
+        s.estatus
+    FROM suplementos s
+    JOIN existencias e ON s.id = e.id_suplemento
     WHERE 1=1
 ";
 
 if ($filtro_q !== '') {
-    $sql .= " AND (l.codigo LIKE '%$filtro_q%' OR l.titulo LIKE '%$filtro_q%')";
-}
-if ($solo_activos) {
-    $sql .= " AND l.estatus = 1";
+    $sql .= " AND (s.codigo LIKE '%$filtro_q%' OR s.nombre LIKE '%$filtro_q%')";
 }
 
-$sql .= " ORDER BY l.titulo";
+if ($solo_activos) {
+    $sql .= " AND s.estatus = 1";
+}
+
+$sql .= " ORDER BY s.nombre";
 
 // ------------------------
 // 3. Ejecutar query
@@ -64,6 +64,10 @@ $titulo_reporte = "REPORTE DE INVENTARIO ACTUAL";
 ob_start();
 ?>
 
+
+<link rel="stylesheet" href="../css/styles.css">
+
+
 <div class="card filtros-print mb-20">
     <h3 class="mb-15">Filtros de Inventario</h3>
 
@@ -73,12 +77,12 @@ ob_start();
 
             <!-- Buscar -->
             <div class="filter-group-large">
-                <label for="q">Buscar Producto</label>
+                <label for="q">Buscar Suplemento</label>
                 <input 
                     type="text"
                     id="q" 
                     name="q" 
-                    placeholder="Código o Título..." 
+                    placeholder="Código o Nombre..." 
                     class="filter-input"
                     value="<?php echo htmlspecialchars($filtro_q); ?>"
                 >
@@ -116,7 +120,7 @@ ob_start();
 <!-- Tabla -->
 <div class="card">
     <p class="font-bold text-sm">
-        Total de Productos: <?php echo $total_items; ?>
+        Total de Suplementos: <?php echo $total_items; ?>
     </p>
 
     <div class="table-responsive">
@@ -124,7 +128,7 @@ ob_start();
             <thead>
                 <tr class="bg-green">
                     <th class="w-150">Código</th>
-                    <th>Título del Libro</th>
+                    <th>Nombre del Suplemento</th>
                     <th class="w-120 text-right">Precio Venta</th>
                     <th class="w-100 text-center">Stock Actual</th>
                     <th class="w-150 text-right">Valor Inventario</th>
@@ -161,7 +165,7 @@ ob_start();
                 <?php else: ?>
                     <tr>
                         <td colspan="5" class="text-center">
-                            No se encontraron productos con los filtros aplicados.
+                            No se encontraron suplementos con los filtros aplicados.
                         </td>
                     </tr>
                 <?php endif; ?>

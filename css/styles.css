@@ -1,113 +1,273 @@
-/* ====================================================================
-   ESTILOS LOGIN - María de Letras
-==================================================================== */
+/* =============================
+   VARIABLES Y BASE
+============================= */
+:root {
+    --color-principal: #000000;
+    --color-secundario: #ffffff;
+    --color-fondo: #f5f5f5;
+    --color-alerta: #e74c3c;
+    --color-exito: #27ae60;
+}
 
-/* Body general */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
 body {
     font-family: 'Arial', sans-serif;
-    background: linear-gradient(135deg, #E1580F, #9C0722);
-    margin: 0;
-    min-height: 100vh;
+    background: var(--color-fondo);
+    color: #333;
+}
+
+/* =============================
+   NAVBAR
+============================= */
+.navbar {
     display: flex;
-    justify-content: center;
     align-items: center;
-    color: #222;
+    justify-content: space-between;
+    background: var(--color-principal);
+    padding: 10px 20px;
+    color: var(--color-secundario);
 }
 
-/* Contenedor login */
-.container-login {
-    background: #fff;
-    border-radius: 12px;
-    padding: 30px 25px;
-    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
-    width: 100%;
-    max-width: 400px;
-    text-align: center;
-    box-sizing: border-box;
+.navbar-logo img {
+    height: 40px;
 }
 
-/* Logo */
-.logo img {
-    height: 70px;
-    margin-bottom: 15px;
+.navbar-menu {
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }
 
-.logo h2 {
-    margin: 0 0 25px 0;
-    font-size: 24px;
-    color: #C82B1D;
-    font-weight: bold;
+.navbar-menu a, .dropbtn {
+    color: var(--color-secundario);
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: background 0.2s;
 }
 
-/* Mensajes de error */
-.alert-custom-danger {
-    background-color: #f8d7da;
-    color: #721c24;
-    padding: 12px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    font-size: 14px;
-    border: 1px solid #f5c6cb;
+.navbar-menu a:hover, .dropdown:hover .dropbtn {
+    background: #222;
 }
 
-/* Formulario */
-.form-index label {
+.dropdown {
+    position: relative;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background: #111;
+    min-width: 160px;
+    z-index: 1;
+    border-radius: 4px;
+}
+
+.dropdown-content a {
     display: block;
-    text-align: left;
-    font-weight: 600;
-    color: #444;
-    margin-bottom: 6px;
-    font-size: 14px;
+    padding: 10px;
 }
 
-.form-index input {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 15px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    font-size: 14px;
-    box-sizing: border-box;
-    transition: 0.2s;
+.dropdown:hover .dropdown-content {
+    display: block;
 }
 
-.form-index input:focus {
-    outline: none;
-    border-color: #C82B1D;
-    box-shadow: 0 0 0 3px rgba(200, 43, 29, 0.15);
-}
-
-/* Botón de ingreso */
+/* =============================
+   BUTTONS
+============================= */
 .btn-general {
-    background-color: #C82B1D;
-    color: #fff;
-    padding: 12px;
-    width: 100%;
-    font-size: 16px;
-    font-weight: bold;
-    border-radius: 8px;
+    background: var(--color-principal);
+    color: var(--color-secundario);
     border: none;
+    padding: 10px 15px;
     cursor: pointer;
-    transition: 0.3s;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background 0.2s;
 }
 
 .btn-general:hover {
-    background-color: #9C0722;
-    transform: translateY(-2px);
+    background: #222;
 }
 
-/* Responsive */
-@media (max-width: 480px) {
-    .container-login {
-        padding: 20px;
-    }
+.w-full { width: 100%; }
+.w-auto { width: auto; }
+.w-150 { width: 150px; }
 
-    .logo h2 {
-        font-size: 20px;
-    }
-
-    .btn-general {
-        font-size: 14px;
-        padding: 10px;
-    }
+/* =============================
+   CARDS / CONTENEDORES
+============================= */
+.card {
+    background: var(--color-secundario);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    margin-bottom: 20px;
 }
+
+.main-container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 15px;
+}
+
+/* =============================
+   FORMULARIOS
+============================= */
+input, select, textarea {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: var(--color-principal);
+    outline: none;
+}
+
+/* =============================
+   TABLES
+============================= */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+thead {
+    background: var(--color-principal);
+    color: var(--color-secundario);
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th.text-center, td.text-center { text-align: center; }
+th.text-right, td.text-right { text-align: right; }
+
+tbody tr:hover {
+    background: #f0f0f0;
+}
+
+/* =============================
+   ALERTAS
+============================= */
+.alert-custom-danger {
+    background: var(--color-alerta);
+    color: #fff;
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.alert-custom-success {
+    background: var(--color-exito);
+    color: #fff;
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+/* =============================
+   DASHBOARD / GRID
+============================= */
+.dashboard-grid, .admin-grid-actions {
+    display: grid;
+    gap: 20px;
+}
+
+.dashboard-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.admin-grid-actions {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.admin-btn-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-principal);
+    color: var(--color-secundario);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.admin-btn-card:hover {
+    background: #222;
+}
+
+.admin-btn-card svg {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 10px;
+    fill: var(--color-secundario);
+}
+
+/* =============================
+   LOGIN
+============================= */
+.container-login {
+    max-width: 400px;
+    margin: 80px auto;
+    padding: 20px;
+    background: var(--color-secundario);
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.container-login h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.logo img {
+    display: block;
+    margin: 0 auto 15px auto;
+    height: 60px;
+}
+
+/* =============================
+   OTROS
+============================= */
+.flex-row { display: flex; gap: 10px; align-items: center; }
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.text-gray { color: #888; }
+.text-muted { color: #aaa; }
+.text-xl { font-size: 18px; }
+.text-right { text-align: right; }
+.text-center { text-align: center; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.grid-2-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+.img-product-small { height: 50px; border-radius: 5px; }
+.mt-15 { margin-top: 15px; }
+.mt-20 { margin-top: 20px; }
+.mb-15 { margin-bottom: 15px; }
+.mb-20 { margin-bottom: 20px; }
+.mb-30 { margin-bottom: 30px; }
