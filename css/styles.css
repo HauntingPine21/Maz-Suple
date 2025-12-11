@@ -1,148 +1,113 @@
-/* ==========================================================
-   CSS POS-Suplementos | Dashboard + Punto de Venta
-   Versión adaptada de estilos generales
-   Responsable: Rol 2 UX-UI
-========================================================== */
+/* ====================================================================
+   ESTILOS LOGIN - María de Letras
+==================================================================== */
 
-/* BODY: Fondo neutro y centrado de contenedor principal */
+/* Body general */
 body {
-  font-family: Arial, Helvetica, sans-serif;
-  background: #f7f7f7;
-  margin: 0;
-  color: #222;
-  min-height: 100vh;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #E1580F, #9C0722);
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #222;
 }
 
-/* NAVBAR: Superior fijo */
-.navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 60px;
-  background: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 20px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.12);
-  z-index: 1000;
-}
-.navbar-logo img { height: 40px; }
-.navbar-menu a {
-  margin-left: 16px;
-  text-decoration: none;
-  font-weight: bold;
-  color: #C82B1D;
-}
-.navbar-menu a:hover { color: #9C0722; }
-
-/* CONTENEDOR PRINCIPAL */
-.main-container {
-  width: 100%;
-  max-width: 1200px;
-  margin: 80px auto 30px auto;
-  padding: 20px;
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+/* Contenedor login */
+.container-login {
+    background: #fff;
+    border-radius: 12px;
+    padding: 30px 25px;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    box-sizing: border-box;
 }
 
-/* TARJETAS DE PRODUCTO / VENTAS */
-.card {
-  background: #fff;
-  border-radius: 8px;
-  padding: 16px;
-  margin: 12px 0;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+/* Logo */
+.logo img {
+    height: 70px;
+    margin-bottom: 15px;
 }
 
-/* GRID DE PRODUCTOS */
-.product-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 16px;
+.logo h2 {
+    margin: 0 0 25px 0;
+    font-size: 24px;
+    color: #C82B1D;
+    font-weight: bold;
 }
 
-/* PRODUCTO INDIVIDUAL */
-.product-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 12px;
-  background: #fafafa;
-  border-radius: 6px;
-  border: 1px solid #eee;
-  transition: 0.2s;
-}
-.product-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-}
-.product-card img {
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  margin-bottom: 10px;
-}
-.product-card span {
-  font-size: 14px;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 6px;
-}
-.product-card .price {
-  color: #0e7a0e;
+/* Mensajes de error */
+.alert-custom-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    border: 1px solid #f5c6cb;
 }
 
-/* CARRITO DE COMPRAS */
-.cart-container {
-  margin-top: 20px;
-  border-top: 2px solid #ddd;
-  padding-top: 10px;
+/* Formulario */
+.form-index label {
+    display: block;
+    text-align: left;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 6px;
+    font-size: 14px;
 }
-.cart-table {
-  width: 100%;
-  border-collapse: collapse;
+
+.form-index input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    box-sizing: border-box;
+    transition: 0.2s;
 }
-.cart-table th, .cart-table td {
-  padding: 10px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
+
+.form-index input:focus {
+    outline: none;
+    border-color: #C82B1D;
+    box-shadow: 0 0 0 3px rgba(200, 43, 29, 0.15);
 }
-.cart-table th { background: #f8f8f8; }
-.cart-table tr:hover { background: #f1f1f1; }
 
-/* INPUTS DE CANTIDAD Y COSTO */
-.input-qty { width: 60px; text-align: center; }
-.input-cost { width: 100px; text-align: right; }
-
-/* BOTONES */
-.btn-add-cart, .btn-remove-cart, .btn-finalize {
-  padding: 8px 12px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: bold;
-  color: #fff;
-  transition: 0.2s;
+/* Botón de ingreso */
+.btn-general {
+    background-color: #C82B1D;
+    color: #fff;
+    padding: 12px;
+    width: 100%;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
 }
-.btn-add-cart { background: #0e7a0e; }
-.btn-add-cart:hover { background: #0b5c0b; }
-.btn-remove-cart { background: #dc3545; }
-.btn-remove-cart:hover { background: #a71d2a; }
-.btn-finalize { background: #C82B1D; }
-.btn-finalize:hover { background: #9C0722; }
 
-/* ALERTAS */
-.alert-success { background: #d4edda; color: #155724; padding: 8px; border-radius: 4px; margin-bottom: 10px; }
-.alert-error { background: #f8d7da; color: #721c24; padding: 8px; border-radius: 4px; margin-bottom: 10px; }
+.btn-general:hover {
+    background-color: #9C0722;
+    transform: translateY(-2px);
+}
 
-/* RESPONSIVE MOBILE */
-@media (max-width: 768px) {
-  .product-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
-  .main-container { margin: 60px 10px 20px 10px; padding: 15px; }
-  .navbar-menu { flex-direction: column; top: 60px; display: none; width: 100%; background: #fff; padding: 10px 0; }
-  .navbar-menu.active { display: flex; }
-  .navbar-menu a { margin: 8px 0; text-align: center; font-size: 16px; }
+/* Responsive */
+@media (max-width: 480px) {
+    .container-login {
+        padding: 20px;
+    }
+
+    .logo h2 {
+        font-size: 20px;
+    }
+
+    .btn-general {
+        font-size: 14px;
+        padding: 10px;
+    }
 }

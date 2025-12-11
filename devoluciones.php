@@ -40,7 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['folio_input'])) {
                   WHERE dv.id_venta = $id_venta_encontrada";
 
         $res_d = $mysqli->query($sql_d);
-        
 
         while ($row = $res_d->fetch_assoc()) {
             $detalles_venta[] = $row;

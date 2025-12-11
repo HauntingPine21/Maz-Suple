@@ -43,7 +43,6 @@ if (isset($mysqli)) {
             <span></span>
             <span></span>
         </button>
-        
 
         <div class="navbar-menu" id="navbar-menu">
 
