@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $mysqli->begin_transaction();
         try {
             $sql = "INSERT INTO suplementos (codigo, nombre, marca, precio_venta, estatus)
-                    VALUES (?, ?, ?, ?, 1)";
+                     VALUES (?, ?, ?, ?, 1)";
             $stmt = $mysqli->prepare($sql);
             $stmt->bind_param("sssd", $codigo, $nombre, $marca, $precio);
             $stmt->execute();
@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             // Insertar imagen BLOB si existe
             if ($imagen_binaria) {
                 $sql_img = "INSERT INTO imagenes_suplemento (id_suplemento, contenido, tipo_mime, es_principal)
-                            VALUES (?, ?, ?, 1)";
+                             VALUES (?, ?, ?, 1)";
                 $stmt_img = $mysqli->prepare($sql_img);
                 $null = NULL;
                 $stmt_img->bind_param("ibs", $id_suplemento, $null, $tipo_mime);
@@ -53,8 +53,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         } catch (Exception $e) {
             $mysqli->rollback();
             $mensaje = str_contains($e->getMessage(), 'Duplicate') ?
-                        "Error: El código '$codigo' ya existe." :
-                        "Error: " . $e->getMessage();
+                         "Error: El código '$codigo' ya existe." :
+                         "Error: " . $e->getMessage();
         }
     }
 }
@@ -95,106 +95,171 @@ $productos = $mysqli->query($sql_suplementos);
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Maz Suple | Productos</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <title>Maz Suple | Gestión de Productos</title>
+    <link rel="stylesheet" href="css/productos.css">
 </head>
 <body>
-    <div class="main-container">
-        <h2>Gestión de Productos</h2>
-
-        <?php if ($mensaje !== ""): ?>
-            <div class="<?= strpos($mensaje,'Error')!==false?'alert-custom-danger':'alert-custom-success' ?> text-center">
-                <?= htmlspecialchars($mensaje) ?>
-            </div>
-        <?php endif; ?>
-
-        <!-- FORMULARIO DE ALTA -->
-        <div class="card mb-30">
-            <h3>Agregar Nuevo Suplemento</h3>
-            <form method="POST" enctype="multipart/form-data">
-                <input type="hidden" name="action" value="crear">
-                <div class="grid-2-cols">
-                    <div>
-                        <label>Código</label><br>
-                        <input type="text" name="codigo" required placeholder="Ej: SUP001" class="input-padded">
-                        <br><br>
-                        <label>Nombre</label><br>
-                        <input type="text" name="nombre" required placeholder="Ej: Proteína Whey" class="input-padded">
-                        <br><br>
-                        <label>Marca</label><br>
-                        <input type="text" name="marca" required placeholder="Ej: NutriPower" class="input-padded">
-                    </div>
-                    <div>
-                        <label>Precio</label><br>
-                        <input type="number" name="precio" required step="0.01" min="0" placeholder="Ej: 250.00" class="input-padded">
-                        <br><br>
-                        <label>Imagen (Máx. 2MB)</label><br>
-                        <input type="file" name="imagen" accept="image/*" class="file-input-padded">
-                    </div>
-                </div>
-                <button type="submit" class="btn-general mt-15">Guardar Suplemento</button>
-            </form>
-        </div>
-
-        <!-- LISTADO DE PRODUCTOS -->
-        <div class="card">
-            <h3>Listado de Suplementos</h3>
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Imagen</th>
-                            <th>Código</th>
-                            <th>Nombre</th>
-                            <th>Marca</th>
-                            <th>Precio</th>
-                            <th>Stock</th>
-                            <th>Estatus</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if ($productos && $productos->num_rows > 0): ?>
-                            <?php while($p = $productos->fetch_assoc()): ?>
-                                <tr>
-                                    <td><img src="img.php?tipo=suplemento&id=<?= $p['id'] ?>" class="img-product-small" alt="Imagen"></td>
-                                    <td><?= htmlspecialchars($p['codigo']) ?></td>
-                                    <td><?= htmlspecialchars($p['nombre']) ?></td>
-                                    <td><?= htmlspecialchars($p['marca']) ?></td>
-                                    <td>$<?= number_format($p['precio_venta'],2) ?></td>
-                                    <td><?= $p['cantidad'] ?></td>
-                                    <td><?= $p['estatus'] ? '<span class="text-success-bold">ACTIVO</span>' : '<span class="text-danger-simple">INACTIVO</span>' ?></td>
-                                    <td class="text-center text-nowrap">
-                                        <a href="editar_producto.php?id=<?= $p['id'] ?>" class="btn-editar">Editar</a>
-                                        
-                                        <?php if ($p['estatus']): ?>
-                                            <a href="productos.php?action=desactivar&id=<?= $p['id'] ?>" 
-                                            class="btn-desactivar btn-confirm-action"
-                                            data-confirm-message="¿Seguro quieres desactivar este producto?">
-                                            Desactivar
-                                            </a>
-                                        <?php else: ?>
-                                            <a href="productos.php?action=activar&id=<?= $p['id'] ?>" 
-                                            class="btn-general btn-confirm-action"
-                                            data-confirm-message="¿Seguro quieres activar este producto?">
-                                            Activar
-                                            </a>
-                                        <?php endif; ?>
-                                    </td>
-                                </tr>
-                            <?php endwhile; ?>
-                        <?php else: ?>
-                            <tr>
-                                <td colspan="8" class="text-center text-muted">No hay suplementos registrados.</td>
-                            </tr>
-                        <?php endif; ?>
-                    </tbody>
-
-                </table>
-            </div>
-        </div>
+    
+<nav class="navbar">
+    <div class="navbar-logo">
+        <img src="assets/img/logo-mazsuplementos_v2.svg" alt="Logo Maz Suplementos">
     </div>
 
-    <script src="js/main.js"></script>
+    <button class="menu-toggle" id="mobile-menu-btn">
+        <span></span><span></span><span></span>
+    </button>
+
+    <div class="navbar-menu" id="navbar-menu">
+        <div class="navbar-links">
+            <a href="dashboard.php" class="nav-link">🏠 Inicio</a>
+            <a href="ventas.php" class="nav-link">🛒 Punto de Venta</a>
+            <a href="devoluciones.php" class="nav-link">↩️ Devoluciones</a>
+        </div>
+        
+        <?php if ($rol === 'admin'): ?>
+        <hr class="nav-divider">
+        <div class="dropdown">
+            <button class="dropbtn active">⚙️ Gestión ▾</button>
+            <div class="dropdown-content show">
+                <a href="productos.php" class="active">Productos</a>
+                <a href="compras.php">Compras</a>
+                <a href="usuarios.php">Usuarios</a>
+            </div>
+        </div>
+
+        <div class="dropdown">
+            <button class="dropbtn">📈 Reportes ▾</button>
+            <div class="dropdown-content">
+                <a href="reportes/compras.php">Compras</a>
+                <a href="reportes/devoluciones.php">Devoluciones</a>
+                <a href="reportes/inventario.php">Inventario</a>
+                <a href="reportes/ventas_detalle.php">Ventas Detalle</a>
+                <a href="reportes/ventas_encabezado.php">Ventas Encabezado</a>
+            </div>
+        </div>
+        <?php endif; ?>
+
+        <div class="navbar-user-info">
+            <span class="user-text">Cajero: 
+                <strong><?php echo htmlspecialchars($_SESSION['user']['nombre']); ?></strong>
+            </span>
+            <a href="includes/logout.php" class="btn-logout">Cerrar Sesión</a>
+        </div>
+    </div>
+</nav>
+
+<main class="main-content-wrapper">
+    <h2>Gestión de Productos</h2>
+
+    <?php if ($mensaje !== ""): ?>
+        <div class="<?= strpos($mensaje,'Error')!==false?'alert-custom-danger':'alert-custom-success' ?> text-center">
+            <?= htmlspecialchars($mensaje) ?>
+        </div>
+    <?php endif; ?>
+
+    <div class="card mb-30 card-form">
+        <h3>Agregar Nuevo Suplemento</h3>
+        <form method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="action" value="crear">
+            <div class="grid-2-cols">
+                <div>
+                    <label for="codigo">Código</label>
+                    <input type="text" id="codigo" name="codigo" required placeholder="Ej: SUP001" class="input-padded">
+                    
+                    <label for="nombre">Nombre</label>
+                    <input type="text" id="nombre" name="nombre" required placeholder="Ej: Proteína Whey" class="input-padded">
+                    
+                    <label for="marca">Marca</label>
+                    <input type="text" id="marca" name="marca" required placeholder="Ej: NutriPower" class="input-padded">
+                </div>
+                <div>
+                    <label for="precio">Precio de Venta ($)</label>
+                    <input type="number" id="precio" name="precio" required step="0.01" min="0" placeholder="Ej: 250.00" class="input-padded">
+                    
+                    <label for="imagen">Imagen (Máx. 2MB)</label>
+                    <input type="file" id="imagen" name="imagen" accept="image/*" class="file-input-padded">
+                </div>
+            </div>
+            <button type="submit" class="btn-general mt-15 w-full">Guardar Suplemento</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h3>Listado de Suplementos</h3>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="col-img">Imagen</th>
+                        <th>Código</th>
+                        <th>Nombre</th>
+                        <th>Marca</th>
+                        <th class="col-price">Precio</th>
+                        <th class="col-stock">Stock</th>
+                        <th class="col-status">Estatus</th>
+                        <th class="col-actions">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if ($productos && $productos->num_rows > 0): ?>
+                        <?php while($p = $productos->fetch_assoc()): ?>
+                            <tr class="<?= $p['estatus'] ? '' : 'row-inactive' ?>">
+                                <td>
+                                    <img src="img.php?tipo=suplemento&id=<?= $p['id'] ?>" class="img-product-small" alt="Imagen del producto">
+                                </td>
+                                <td><?= htmlspecialchars($p['codigo']) ?></td>
+                                <td><?= htmlspecialchars($p['nombre']) ?></td>
+                                <td><?= htmlspecialchars($p['marca']) ?></td>
+                                <td class="text-right">$<?= number_format($p['precio_venta'],2) ?></td>
+                                <td class="text-center stock-<?= $p['cantidad'] > 0 ? 'good' : 'low' ?>"><?= $p['cantidad'] ?></td>
+                                <td><?= $p['estatus'] ? '<span class="text-success-bold">ACTIVO</span>' : '<span class="text-danger-simple">INACTIVO</span>' ?></td>
+                                <td class="text-center text-nowrap action-col">
+                                    <a href="editar_producto.php?id=<?= $p['id'] ?>" class="btn-editar">✏️ Editar</a>
+                                    
+                                    <?php if ($p['estatus']): ?>
+                                        <a href="productos.php?action=desactivar&id=<?= $p['id'] ?>" 
+                                        class="btn-desactivar btn-confirm-action"
+                                        data-confirm-message="¿Seguro quieres desactivar este producto?">
+                                        ❌ Desactivar
+                                        </a>
+                                    <?php else: ?>
+                                        <a href="productos.php?action=activar&id=<?= $p['id'] ?>" 
+                                        class="btn-general btn-confirm-action btn-activate"
+                                        data-confirm-message="¿Seguro quieres activar este producto?">
+                                        ✅ Activar
+                                        </a>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endwhile; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="8" class="text-center text-muted">No hay suplementos registrados.</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</main>
+
+<script src="js/main.js"></script>
+<script>
+    // Este script se mantiene para la confirmación de acciones
+    document.querySelectorAll('.btn-confirm-action').forEach(btn => {
+        btn.addEventListener('click', function(event) {
+            const message = this.getAttribute('data-confirm-message');
+            if (!confirm(message)) {
+                event.preventDefault();
+            }
+        });
+    });
+
+    // Script para la barra de navegación móvil (se puede mover a main.js)
+    document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+        document.getElementById('navbar-menu').classList.toggle('active');
+    });
+</script>
 </body>
 </html>

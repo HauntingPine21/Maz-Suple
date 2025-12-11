@@ -1,0 +1,223 @@
+/* ====================================================================
+    0. PALETA DE COLORES Y ESTRUCTURA GLOBAL
+==================================================================== */
+:root {
+    /* Colores del Tema (Blanco y Azul) */
+    --color-acento-principal: #007bff; /* Azul vibrante */
+    --color-acento-secundario: #0056b3; /* Azul marino/oscuro */
+    --color-fondo: #ffffff;
+    --color-borde: #dee2e6;
+    --color-texto-oscuro: #212529;
+    --color-texto-claro: #ffffff;
+    --color-error: #dc3545;
+    --color-exito: #28a745;
+    
+    /* Variables del Layout Sidebar */
+    --sidebar-width: 250px;
+    --sidebar-color: #2c3e50; /* Azul oscuro para la barra lateral */
+    --main-bg: #f8f9fa;      /* Fondo de contenido principal (gris muy claro) */
+    --main-padding: 30px;
+}
+
+/* ====================================================================
+    1. LAYOUT (SIDEBAR Y CONTENIDO) - BASE
+    (Mismo código que productos.css para consistencia)
+==================================================================== */
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--main-bg);
+    margin: 0;
+    display: flex;
+    min-height: 100vh;
+    overflow-x: hidden;
+    color: var(--color-texto-oscuro);
+}
+
+.main-content-wrapper {
+    margin-left: var(--sidebar-width);
+    padding: var(--main-padding);
+    flex-grow: 1;
+    width: calc(100% - var(--sidebar-width));
+    box-sizing: border-box;
+    padding-top: 40px; 
+}
+
+/* SIDEBAR Y MENÚ */
+.navbar {
+    position: fixed; top: 0; left: 0; width: var(--sidebar-width); height: 100vh;
+    background: var(--sidebar-color); box-shadow: 4px 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000; display: flex; flex-direction: column; 
+    align-items: center; padding: 20px 10px; box-sizing: border-box;
+}
+.navbar-logo { margin-bottom: 25px; }
+.navbar-logo img { max-height: 50px; }
+.navbar-menu { display: flex; flex-direction: column; width: 100%; flex-grow: 1; }
+.navbar-links { width: 100%; margin-bottom: 10px; }
+.nav-divider { border: 0; border-top: 1px solid #455a64; width: 80%; margin: 15px auto; }
+
+.nav-link, .dropbtn {
+    display: block; margin: 5px 0; padding: 12px 15px; text-decoration: none;
+    font-weight: 600; color: var(--color-texto-claro) !important;
+    border-radius: 6px; transition: background-color 0.2s;
+    text-align: left; width: 100%; box-sizing: border-box;
+    background-color: transparent; border: none;
+}
+.nav-link.active, .dropbtn.active { background-color: var(--color-acento-principal); }
+.nav-link:hover, .dropbtn:hover { background-color: var(--color-acento-principal); }
+
+/* Dropdown */
+.dropdown { position: relative; width: 100%; margin-bottom: 10px; }
+.dropdown-content { display: none; position: relative; background-color: #3e5265; width: 100%; padding: 5px 0; border-radius: 0 0 6px 6px; }
+.dropdown:hover .dropdown-content, .dropdown-content.show { display: block; }
+.dropdown-content a { padding: 8px 15px 8px 30px; font-size: 14px; font-weight: 400; color: var(--color-texto-claro); }
+.dropdown-content a:hover, .dropdown-content a.active { background-color: var(--color-acento-secundario); }
+
+/* Info y Logout */
+.navbar-user-info { margin-top: auto; width: 100%; padding-top: 15px; border-top: 1px solid #455a64; text-align: center; }
+.navbar-user-info .user-text { display: block; color: var(--color-borde); margin-bottom: 8px; font-size: 0.9em; }
+.btn-logout { background: var(--color-error); color: var(--color-texto-claro) !important; padding: 8px 15px; border-radius: 6px; display: inline-block; width: 90%; text-decoration: none; font-size: 14px; font-weight: 600; }
+.btn-logout:hover { background: #b02a37; }
+
+
+/* ====================================================================
+    2. ESTILOS DE GESTIÓN DE USUARIOS
+==================================================================== */
+
+h2 { color: var(--color-texto-oscuro); margin-bottom: 20px; }
+
+/* Tarjeta General */
+.card {
+    background: var(--color-fondo);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--color-borde);
+    box-sizing: border-box;
+    margin-bottom: 20px;
+}
+.card h3 { color: var(--color-acento-secundario); margin-top: 0; margin-bottom: 15px; }
+
+/* Mensajes de Alerta */
+.alert-custom-danger { background: #f8d7da; color: var(--color-error); padding: 12px; border-radius: 6px; margin-bottom: 20px; border: 1px solid #f5c6cb; font-weight: 600; }
+.alert-custom-success { background: #d4edda; color: var(--color-exito); padding: 12px; border-radius: 6px; margin-bottom: 20px; border: 1px solid #c3e6cb; font-weight: 600; }
+.text-center { text-align: center; }
+
+/* Formulario de Alta */
+.grid-2-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.card-form label {
+    display: block;
+    font-weight: 600;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+.card-form label:first-child { margin-top: 0; }
+
+.input-padded, .select-padded {
+    width: 100%; padding: 10px; margin-bottom: 15px;
+    border: 1px solid var(--color-borde); border-radius: 6px;
+    font-size: 15px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+    box-sizing: border-box;
+}
+.input-padded:focus, .select-padded:focus { 
+    border-color: var(--color-acento-principal);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+/* Botones de Formulario */
+.btn-general {
+    background: var(--color-acento-principal);
+    color: var(--color-texto-claro) !important;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+.btn-general:hover { background: var(--color-acento-secundario); }
+.w-full { width: 100%; }
+.mt-15 { margin-top: 15px; }
+.mb-30 { margin-bottom: 30px; }
+
+
+/* Tabla de Listado */
+.table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+table {
+    width: 100%; border-collapse: collapse; margin-top: 15px;
+    border: 1px solid var(--color-borde); border-radius: 8px;
+    overflow: hidden; min-width: 600px;
+}
+th { background: #e9ecef; color: var(--color-texto-oscuro); text-align: left; }
+th, td { padding: 10px; border-bottom: 1px solid #eee; font-size: 14px; vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+
+/* Estilos de Fila */
+.row-inactive { background-color: #fce8e8; opacity: 0.7; }
+.row-inactive td { color: #888; }
+.row-inactive a { opacity: 1.0; }
+
+
+/* Columnas Específicas */
+.col-small { width: 50px; }
+.col-medium { width: 120px; }
+.col-status { width: 80px; }
+.col-actions-sm { width: 150px; text-align: center; }
+
+/* Estilos de Estatus */
+.text-success-bold { font-weight: 600; color: var(--color-exito); }
+.text-danger-simple { font-weight: 600; color: var(--color-error); }
+.text-small-muted { color: #999; font-size: 0.9em; }
+
+
+/* Botones de Acción en Tabla */
+.action-col a { margin: 2px; padding: 5px 8px; font-size: 13px; border-radius: 4px; font-weight: 600; text-decoration: none; white-space: nowrap; }
+
+.btn-desactivar { background: var(--color-error); color: var(--color-texto-claro) !important; }
+.btn-desactivar:hover { background: #b02a37; }
+
+/* Botón Activar (usa el estilo btn-general) */
+.btn-activate { background: var(--color-exito); }
+.btn-activate:hover { background: #1e7e34; }
+
+
+/* ====================================================================
+    3. RESPONSIVE (Móvil)
+==================================================================== */
+.menu-toggle { display: none; position: absolute; top: 20px; right: 20px; flex-direction: column; justify-content: space-between; width: 30px; height: 21px; background: transparent; border: none; cursor: pointer; padding: 0; z-index: 1100; }
+.menu-toggle span { display: block; width: 100%; height: 3px; background-color: var(--color-texto-claro); transition: all 0.3s ease; }
+
+@media (max-width: 768px) {
+    /* Layout Móvil */
+    .navbar { position: fixed; top: 0; left: 0; width: 100%; height: 70px; flex-direction: row; justify-content: space-between; align-items: center; background: var(--color-fondo); box-shadow: 0 0 8px rgba(0, 0, 0, 0.1); border-bottom: 3px solid var(--color-acento-principal); padding: 0 15px; }
+    .navbar-logo { margin-bottom: 0; }
+    .navbar-logo img { height: 40px; }
+    .navbar-user-info { display: none; }
+    .main-content-wrapper { margin-left: 0; margin-top: 80px; width: 100%; padding: 15px; }
+    .menu-toggle { display: flex; right: 80px; top: 15px; }
+    .menu-toggle span { background-color: var(--color-acento-principal); }
+    .navbar-menu { display: none; position: absolute; top: 70px; left: 0; width: 100%; background-color: var(--color-fondo); flex-direction: column; align-items: center; padding: 20px 0; box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1); border-top: 1px solid var(--color-borde); z-index: 9999; }
+    .navbar-menu.active { display: flex; }
+    .nav-link, .dropbtn { color: var(--color-texto-oscuro) !important; width: 90%; text-align: center; padding: 15px; margin: 5px auto; }
+    .dropdown-content { position: relative; background-color: #f1f1f1; width: 100%; }
+    .dropdown-content a { color: var(--color-texto-oscuro); }
+    .dropdown-content a.active { background-color: var(--color-acento-principal); color: var(--color-texto-claro); }
+
+    /* Estilos de Formulario Móvil */
+    .grid-2-cols { grid-template-columns: 1fr; }
+    .card-form .input-padded, .card-form .select-padded { width: 100%; }
+
+    /* Estilos de Tabla Móvil */
+    table { min-width: 500px; }
+    .action-col { white-space: normal; } /* Permitir que los botones de acción se envuelvan */
+    .action-col a { display: block; margin: 5px 0; }
+}
