@@ -1,0 +1,128 @@
+/* RESPONSABLE: Rol 2 (UX-UI)
+REQUERIMIENTO: Configuración de impresión 80x40mm
+*/
+@media print {
+    @page {
+        /* SOLUCIÓN: Especificar solo el ancho. La altura se ajustará al contenido.
+           Esto evita que el navegador intente rotar la página. */
+        size: 80mm;
+        margin: 0;
+    }
+
+    body {
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 8pt;
+        /* Tamaño base para el texto normal */
+        margin: 0;
+        /* SOLUCIÓN: Eliminar 'auto' para evitar el cálculo de margen vertical infinito */
+        width: 100%;
+        /* El body ocupa el 100% del @page (80mm) */
+        max-width: 80mm;
+        /* Doble seguro para evitar desbordamiento */
+        box-sizing: border-box;
+        writing-mode: horizontal-tb;
+        /* Asegura la orientación vertical */
+        padding: 0 1.5mm;
+        /* Margen de seguridad interno para evitar cortes en los bordes */
+        overflow-x: hidden;
+        /* Previene cualquier desbordamiento horizontal */
+        height: auto;
+        /* Asegura que la altura se ajuste solo al contenido */
+    }
+
+    /* Regla de ORO para que no se rompan los textos */
+    table {
+        width: 100%;
+    }
+
+    tr {
+        /* Esto evita que una fila se corte a la mitad entre una "página" y otra */
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    .no-print {
+        display: none !important;
+    }
+
+    pre {
+        font-family: inherit;
+        /* Hereda la fuente monoespaciada del body */
+        font-size: inherit;
+        /* Hereda el tamaño de fuente */
+        margin: 0;
+        white-space: pre-wrap;
+        /* Permite que el texto se ajuste si es necesario */
+        overflow-wrap: break-word;
+        /* Fuerza el corte de palabras largas para que no desborden */
+    }
+}
+
+/* =========================================
+   ESTILOS DE TICKET (REFACTORING)
+========================================= */
+.ticket-logo-container {
+    text-align: center;
+}
+
+.ticket-logo {
+    width: 250px;
+    max-width: 90%;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.ticket-title {
+    font-size: 12pt;
+    margin: 0;
+}
+
+.ticket-info {
+    margin: 2px 0;
+    font-size: 7.5pt;
+}
+
+.dashed-line {
+    border-top: 1px dashed black;
+    margin: 5px 0;
+}
+
+.ticket-header-text {
+    margin: 0;
+}
+
+.ticket-subheader-text {
+    margin: 0 0 5px 0;
+}
+
+.ticket-table-header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px dashed black;
+    margin-bottom: 3px;
+    font-weight: bold;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.ticket-total {
+    margin: 5px 0 10px 0;
+    font-size: 11pt;
+    font-weight: bold;
+}
+
+.ticket-center {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.btn-close-window {
+    width: 80%;
+    background: #555;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+}

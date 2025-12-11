@@ -1,0 +1,148 @@
+/* ==========================================================
+   CSS POS-Suplementos | Dashboard + Punto de Venta
+   Versión adaptada de estilos generales
+   Responsable: Rol 2 UX-UI
+========================================================== */
+
+/* BODY: Fondo neutro y centrado de contenedor principal */
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f7f7f7;
+  margin: 0;
+  color: #222;
+  min-height: 100vh;
+}
+
+/* NAVBAR: Superior fijo */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.12);
+  z-index: 1000;
+}
+.navbar-logo img { height: 40px; }
+.navbar-menu a {
+  margin-left: 16px;
+  text-decoration: none;
+  font-weight: bold;
+  color: #C82B1D;
+}
+.navbar-menu a:hover { color: #9C0722; }
+
+/* CONTENEDOR PRINCIPAL */
+.main-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 80px auto 30px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* TARJETAS DE PRODUCTO / VENTAS */
+.card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 12px 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+/* GRID DE PRODUCTOS */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+/* PRODUCTO INDIVIDUAL */
+.product-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px;
+  background: #fafafa;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  transition: 0.2s;
+}
+.product-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+.product-card img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+.product-card span {
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 6px;
+}
+.product-card .price {
+  color: #0e7a0e;
+}
+
+/* CARRITO DE COMPRAS */
+.cart-container {
+  margin-top: 20px;
+  border-top: 2px solid #ddd;
+  padding-top: 10px;
+}
+.cart-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.cart-table th, .cart-table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+.cart-table th { background: #f8f8f8; }
+.cart-table tr:hover { background: #f1f1f1; }
+
+/* INPUTS DE CANTIDAD Y COSTO */
+.input-qty { width: 60px; text-align: center; }
+.input-cost { width: 100px; text-align: right; }
+
+/* BOTONES */
+.btn-add-cart, .btn-remove-cart, .btn-finalize {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #fff;
+  transition: 0.2s;
+}
+.btn-add-cart { background: #0e7a0e; }
+.btn-add-cart:hover { background: #0b5c0b; }
+.btn-remove-cart { background: #dc3545; }
+.btn-remove-cart:hover { background: #a71d2a; }
+.btn-finalize { background: #C82B1D; }
+.btn-finalize:hover { background: #9C0722; }
+
+/* ALERTAS */
+.alert-success { background: #d4edda; color: #155724; padding: 8px; border-radius: 4px; margin-bottom: 10px; }
+.alert-error { background: #f8d7da; color: #721c24; padding: 8px; border-radius: 4px; margin-bottom: 10px; }
+
+/* RESPONSIVE MOBILE */
+@media (max-width: 768px) {
+  .product-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+  .main-container { margin: 60px 10px 20px 10px; padding: 15px; }
+  .navbar-menu { flex-direction: column; top: 60px; display: none; width: 100%; background: #fff; padding: 10px 0; }
+  .navbar-menu.active { display: flex; }
+  .navbar-menu a { margin: 8px 0; text-align: center; font-size: 16px; }
+}
