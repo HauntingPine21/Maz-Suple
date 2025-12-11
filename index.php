@@ -15,7 +15,7 @@ if (isset($_SESSION['error_mensaje'])) {
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>María de Letras | Iniciar sesión</title>
+    <title>Maz-Suple | Iniciar sesión</title>
     <link rel="stylesheet" href="css/styles.css"> 
     <link rel="icon" type="image/png" href="assets/img/logo-maria-de-letras_icon.svg">
     <link rel="stylesheet" href="../css/styles.css">

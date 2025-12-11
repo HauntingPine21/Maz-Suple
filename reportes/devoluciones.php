@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['folio_input'])) {
                   WHERE dv.id_venta = $id_venta_encontrada";
 
         $res_d = $mysqli->query($sql_d);
-        
+
 
         while ($row = $res_d->fetch_assoc()) {
             $detalles_venta[] = $row;
@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['folio_input'])) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>María de Letras | Devoluciones</title>
+    <title>Ma<-Suple | Devoluciones</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="icon" type="image/png" href="assets/img/logo-maria-de-letras_icon.svg">
 </head>
