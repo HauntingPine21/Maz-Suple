@@ -1,5 +1,60 @@
 <?php
-$titulo_reporte = "REPORTE DETALLADO DE VENTAS";
+$titulo_reporte = "REPORTE DETALLADO DE VENTAS DE SUPLEMENTOS";
+
+// Asegúrate de recibir las fechas desde GET
+$fecha_ini = $_GET['inicio'] ?? date('Y-m-01');
+$fecha_fin = $_GET['fin'] ?? date('Y-m-t');
+$producto_filter = $_GET['producto'] ?? '';
+
+require_once '../config/db.php';
+
+// ===============================
+// CONSULTA DETALLE VENTAS
+// ===============================
+$sql = "
+SELECT 
+    v.id AS folio,
+    v.fecha_hora,
+    s.nombre,
+    dv.cantidad,
+    dv.precio_unitario,
+    (dv.cantidad * dv.precio_unitario) AS importe_linea
+FROM detalle_ventas dv
+INNER JOIN ventas v ON dv.id_venta = v.id
+INNER JOIN suplementos s ON dv.id_suplemento = s.id
+WHERE v.fecha_hora BETWEEN ? AND ?
+";
+
+$params = [$fecha_ini . ' 00:00:00', $fecha_fin . ' 23:59:59'];
+
+if (!empty($producto_filter)) {
+    $sql .= " AND s.nombre LIKE ?";
+    $params[] = "%" . $producto_filter . "%";
+}
+
+$sql .= " ORDER BY v.fecha_hora ASC";
+
+$stmt = $mysqli->prepare($sql);
+
+// Bind dinámico según cantidad de parámetros
+if (!empty($params)) {
+    $types = str_repeat('s', count($params));
+    $stmt->bind_param($types, ...$params);
+}
+
+$stmt->execute();
+$res = $stmt->get_result();
+
+$detalles = [];
+$suma_importe = 0;
+$suma_unidades = 0;
+
+while ($row = $res->fetch_assoc()) {
+    $detalles[] = $row;
+    $suma_importe += $row['importe_linea'];
+    $suma_unidades += $row['cantidad'];
+}
+
 ob_start();
 ?>
 
@@ -16,7 +71,7 @@ ob_start();
                     id="inicio" 
                     name="inicio" 
                     required
-                    value="<?= substr($fecha_ini, 0, 10) ?>" 
+                    value="<?= htmlspecialchars(substr($fecha_ini,0,10)) ?>" 
                     class="filter-input">
             </div>
             
@@ -28,19 +83,19 @@ ob_start();
                     id="fin" 
                     name="fin" 
                     required
-                    value="<?= substr($fecha_fin, 0, 10) ?>" 
+                    value="<?= htmlspecialchars(substr($fecha_fin,0,10)) ?>" 
                     class="filter-input">
             </div>
 
             <!-- Filtro por producto opcional -->
             <div class="filter-group-large">
-                <label for="producto">Producto (Opcional)</label>
+                <label for="producto">Suplemento (Opcional)</label>
                 <input 
                     type="text" 
                     id="producto" 
                     name="producto" 
-                    placeholder="Nombre del libro..." 
-                    value="<?= $_GET['producto'] ?? '' ?>"
+                    placeholder="Nombre del suplemento..." 
+                    value="<?= htmlspecialchars($producto_filter) ?>"
                     class="filter-input">
             </div>
             
@@ -55,7 +110,6 @@ ob_start();
     </form>
 </div>
 
-
 <!-- TABLA REAL DE DETALLE -->
 <div class="card">
     <p class="font-bold text-sm">
@@ -68,7 +122,7 @@ ob_start();
             <tr class="bg-green"> 
                 <th class="w-100">Folio</th>
                 <th class="w-150">Fecha/Hora</th>
-                <th>Producto</th>
+                <th>Suplemento</th>
                 <th class="w-100 text-center">Cant.</th>
                 <th class="w-120 text-right">Precio Unit.</th>
                 <th class="w-120 text-right">Importe</th>

@@ -1,6 +1,6 @@
 <?php
-require_once 'includes/security_guard.php'; 
-require_once 'config/db.php';
+require_once '../includes/security_guard.php'; 
+require_once '../config/db.php';
 
 $rol = $_SESSION['user']['rol']; 
 
