@@ -90,7 +90,6 @@ $titulo_reporte = "REPORTE DE INVENTARIO ACTUAL";
             <div class="dropdown">
                 <button class="dropbtn active">Reportes</button>
                 <div class="dropdown-content show">
-                    <a href="compras.php">Reporte compras</a>
                     <a href="devoluciones.php">Reporte devoluciones</a>
                     <a href="inventario.php" class="active">Reporte inventario</a>
                     <a href="ventas_detalle.php">Reporte detalle</a>

@@ -95,7 +95,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['folio_input'])) {
         <div class="dropdown">
             <button class="dropbtn">Reportes ▾</button>
             <div class="dropdown-content">
-                <a href="compras.php">Reportes Compra</a>
                 <a href="../reportes/devoluciones.php">Reportes Devoluciones</a>
                 <a href="../reportes/inventario.php">Reportes Inventario</a>
                 <a href="../reportes/ventas_detalle.php">Reportes Detalle</a>
