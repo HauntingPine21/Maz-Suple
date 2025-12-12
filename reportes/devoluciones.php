@@ -86,9 +86,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['folio_input'])) {
         <div class="dropdown">
             <button class="dropbtn">Gestión ▾</button>
             <div class="dropdown-content">
-                <a href="productos.php">Productos</a>
-                <a href="compras.php">Compras</a>
-                <a href="usuarios.php">Usuarios</a>
+                <a href="../productos.php">Productos</a>
+                <a href="../compras.php">Compras</a>
+                <a href="../usuarios.php">Usuarios</a>
             </div>
         </div>
 
