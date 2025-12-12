@@ -3,9 +3,10 @@
    =============================== */
 
 @page {
-    size: 80mm 40mm;
+    size: 80mm auto;
     margin: 0;
 }
+
 
 body {
     margin: 0;
@@ -15,6 +16,8 @@ body {
     color: #000;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
+    writing-mode: horizontal-tb; /* 🔥 Bloquea rotación interna */
+
 }
 
 .ticket {
