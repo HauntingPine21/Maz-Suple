@@ -70,14 +70,14 @@ while ($row = $res->fetch_assoc()) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Maz-Suple | <?php echo $titulo_reporte; ?></title>
-    <link rel="stylesheet" href="../css/ventasDetalleReportes.css"> 
+    <link rel="stylesheet" href="../css/ventasDetalleReportes.css?v=<?php echo time(); ?>">
 </head>
 
 <body>
     
     <div class="navbar">
         <div class="navbar-logo">
-            <img src="../assets/img/logo-maria-de-letras_v2.svg" alt="Logo de María de Letras">
+            <img src="../assets/ImgLogo.png" alt="Logo">
         </div>
         
         <div class="navbar-menu">

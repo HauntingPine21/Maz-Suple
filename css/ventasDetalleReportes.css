@@ -50,7 +50,8 @@ body {
     align-items: center; padding: 20px 10px; box-sizing: border-box;
 }
 .navbar-logo { margin-bottom: 25px; }
-.navbar-logo img { max-height: 50px; }
+.navbar-logo img { max-height: 150px; }
+.navbar-logo img { margin-right: 15px; }
 .navbar-menu { display: flex; flex-direction: column; width: 100%; flex-grow: 1; }
 .navbar-links { width: 100%; margin-bottom: 10px; }
 .nav-divider { border: 0; border-top: 1px solid #455a64; width: 80%; margin: 15px auto; }
