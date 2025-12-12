@@ -82,7 +82,7 @@ if ($num_devoluciones > 0) {
     
     <div class="navbar">
         <div class="navbar-logo">
-            <img src="../assets/img/logo-maria-de-letras_v2.svg" alt="Logo de María de Letras">
+            <img src="../assets/ImgLogo.png" alt="Logo">
         </div>
         
         <div class="navbar-menu">
@@ -97,7 +97,6 @@ if ($num_devoluciones > 0) {
             <div class="dropdown">
                 <button class="dropbtn active">Reportes</button>
                 <div class="dropdown-content show">
-                    <a href="compras.php">Reporte compras</a>
                     <a href="devoluciones.php" class="active">Reporte devoluciones</a>
                     <a href="inventario.php">Reporte inventario</a>
                     <a href="ventas_detalle.php">Reporte detalle</a>
