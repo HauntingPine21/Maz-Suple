@@ -57,6 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['folio_input'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Maz-Suple | Devoluciones</title>
     <link rel="stylesheet" href="css/devoluciones.css?v=<?php echo time(); ?>">
+    <link rel="icon" type="image/png" href="assets/SupleIcono.png"> 
 </head>
 
 <body>
@@ -91,6 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['folio_input'])) {
         <div class="dropdown">
             <button class="dropbtn">Reportes ▾</button>
             <div class="dropdown-content">
+
                 <a href="reportes/devoluciones.php">Reportes Devoluciones</a>
                 <a href="reportes/inventario.php">Reportes Inventario</a>
                 <a href="reportes/ventas_detalle.php">Reportes Detalle</a>

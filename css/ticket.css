@@ -1,128 +1,85 @@
-/* RESPONSABLE: Rol 2 (UX-UI)
-REQUERIMIENTO: Configuración de impresión 80x40mm
-*/
-@media print {
-    @page {
-        /* SOLUCIÓN: Especificar solo el ancho. La altura se ajustará al contenido.
-           Esto evita que el navegador intente rotar la página. */
-        size: 80mm;
-        margin: 0;
-    }
+/* ===============================
+   CONFIG GLOBAL TICKET 80x40 mm
+   =============================== */
 
-    body {
-        font-family: 'Courier New', Courier, monospace;
-        font-size: 8pt;
-        /* Tamaño base para el texto normal */
-        margin: 0;
-        /* SOLUCIÓN: Eliminar 'auto' para evitar el cálculo de margen vertical infinito */
-        width: 100%;
-        /* El body ocupa el 100% del @page (80mm) */
-        max-width: 80mm;
-        /* Doble seguro para evitar desbordamiento */
-        box-sizing: border-box;
-        writing-mode: horizontal-tb;
-        /* Asegura la orientación vertical */
-        padding: 0 1.5mm;
-        /* Margen de seguridad interno para evitar cortes en los bordes */
-        overflow-x: hidden;
-        /* Previene cualquier desbordamiento horizontal */
-        height: auto;
-        /* Asegura que la altura se ajuste solo al contenido */
-    }
-
-    /* Regla de ORO para que no se rompan los textos */
-    table {
-        width: 100%;
-    }
-
-    tr {
-        /* Esto evita que una fila se corte a la mitad entre una "página" y otra */
-        break-inside: avoid;
-        page-break-inside: avoid;
-    }
-
-    .no-print {
-        display: none !important;
-    }
-
-    pre {
-        font-family: inherit;
-        /* Hereda la fuente monoespaciada del body */
-        font-size: inherit;
-        /* Hereda el tamaño de fuente */
-        margin: 0;
-        white-space: pre-wrap;
-        /* Permite que el texto se ajuste si es necesario */
-        overflow-wrap: break-word;
-        /* Fuerza el corte de palabras largas para que no desborden */
-    }
-}
-
-/* =========================================
-   ESTILOS DE TICKET (REFACTORING)
-========================================= */
-.ticket-logo-container {
-    text-align: center;
-}
-
-.ticket-logo {
-    width: 250px;
-    max-width: 90%;
-    height: auto;
-    margin-bottom: 10px;
-}
-
-.ticket-title {
-    font-size: 12pt;
+@page {
+    size: 80mm auto;
     margin: 0;
 }
 
-.ticket-info {
-    margin: 2px 0;
-    font-size: 7.5pt;
-}
 
-.dashed-line {
-    border-top: 1px dashed black;
-    margin: 5px 0;
-}
-
-.ticket-header-text {
+body {
     margin: 0;
+    padding: 0;
+    font-family: "Courier New", monospace;
+    font-size: 12px;
+    color: #000;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    writing-mode: horizontal-tb; /* 🔥 Bloquea rotación interna */
+
 }
 
-.ticket-subheader-text {
-    margin: 0 0 5px 0;
+.ticket {
+    width: 80mm;
+    padding: 2mm;
+    text-align: center; /* 🔥 CENTRALIZA TODO POR DEFECTO */
 }
 
-.ticket-table-header {
-    display: flex;
-    justify-content: space-between;
-    border-bottom: 1px dashed black;
+.logo {
+    width: 60px;
+    max-height: 60px;
+    margin: 0 auto 6px auto; /* 🔥 Centrado total */
+    display: block;
+}
+
+.title {
+    font-size: 14px;
+    font-weight: bold;
     margin-bottom: 3px;
-    font-weight: bold;
 }
 
-.text-right {
-    text-align: right;
+.info {
+    font-size: 11px;
+    margin-bottom: 3px;
 }
 
-.ticket-total {
-    margin: 5px 0 10px 0;
-    font-size: 11pt;
-    font-weight: bold;
+.line {
+    border-top: 1px dashed #000;
+    margin: 6px auto;
+    width: 95%; /* 🔥 Líneas más centradas como ticket real */
 }
 
-.ticket-center {
-    text-align: center;
-    margin-top: 10px;
+.content {
+    margin-top: 5px;
+    text-align: center; /* 🔥 Encabezado centrado */
 }
 
-.btn-close-window {
-    width: 80%;
-    background: #555;
-    color: white;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
+.productos {
+    text-align: left; /* 🔥 Para mantener columnas legibles */
+    white-space: pre;
+    font-size: 11px;
+    margin: 0 auto;
+    width: 95%; /* 🔥 Acomoda mejor las columnas */
+}
+
+.totales {
+    text-align: center; /* 🔥 Totales centrados */
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+#codigoBarrasTicket {
+    display: block;
+    margin: 5px auto 0 auto; /* 🔥 Totalmente centrado */
+}
+
+.no-print {
+    display: none;
+}
+
+@media screen {
+    .no-print {
+        display: block;
+    }
 }
