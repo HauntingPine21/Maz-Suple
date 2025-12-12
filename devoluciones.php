@@ -57,14 +57,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['folio_input'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>María de Letras | Devoluciones</title>
     <link rel="stylesheet" href="css/devoluciones.css?v=<?php echo time(); ?>">
-    <link rel="icon" type="image/png" href="assets/img/logo-maria-de-letras_icon.svg">
 </head>
 
 <body>
 
 <nav class="navbar">
     <div class="navbar-logo">
-        <img src="assets/img/logo-maria-de-letras_v2.svg" alt="Logo">
+        <img src="assets/ImgLogo.png" alt="Logo">
     </div>
 
     <button class="menu-toggle" id="mobile-menu-btn">

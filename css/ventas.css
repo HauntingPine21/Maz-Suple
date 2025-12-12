@@ -54,7 +54,8 @@ body {
 }
 
 .navbar-logo { margin-bottom: 25px; }
-.navbar-logo img { max-height: 50px; }
+.navbar-logo img { max-height: 150px; }
+.navbar-logo img { margin-right: 15px; }
 
 /* Menú Principal */
 .navbar-menu { display: flex; flex-direction: column; width: 100%; flex-grow: 1; }

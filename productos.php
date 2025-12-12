@@ -105,7 +105,7 @@ $productos = $mysqli->query($sql_suplementos);
     
 <nav class="navbar">
     <div class="navbar-logo">
-        <img src="assets/img/logo-mazsuplementos_v2.svg" alt="Logo Maz Suplementos">
+        <img src="assets/ImgLogo.png" alt="Logo">
     </div>
 
     <button class="menu-toggle" id="mobile-menu-btn">

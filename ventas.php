@@ -19,13 +19,12 @@ if (!isset($_SESSION['carrito'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Maz Suplementos | Punto de Venta</title>
     <link rel="stylesheet" href="css/ventas.css?v=<?php echo time(); ?>">
-    <link rel="icon" type="image/png" href="assets/img/logo-mazsuplementos_icon.svg">
   </head>
 
   <body>
     <nav class="navbar">
         <div class="navbar-logo">
-            <img src="assets/img/logo-mazsuplementos_v2.svg" alt="Logo Maz Suplementos">
+            <img src="assets/ImgLogo.png" alt="Logo Maz Suplementos">
         </div>
         
         <button class="menu-toggle" id="mobile-menu-btn">

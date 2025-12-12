@@ -2,15 +2,15 @@
     0. PALETA DE COLORES Y ESTRUCTURA GLOBAL
 ==================================================================== */
 :root {
-    /* Colores del Tema (Blanco y Azul) */
+    /* Colores del Tema (Unificado) */
     --color-acento-principal: #007bff; /* Azul vibrante */
     --color-acento-secundario: #0056b3; /* Azul marino/oscuro */
     --color-fondo: #ffffff;
     --color-borde: #dee2e6;
     --color-texto-oscuro: #212529;
     --color-texto-claro: #ffffff;
-    --color-error: #dc3545;
-    --color-exito: #28a745;
+    --color-error: #dc3545; /* Rojo para errores / desactivar */
+    --color-exito: #28a745; /* Verde para éxito / procesar */
     
     /* Variables del Layout Sidebar */
     --sidebar-width: 250px;
@@ -32,7 +32,7 @@ body {
     color: var(--color-texto-oscuro);
 }
 
-.main-content-wrapper {
+.main-container { 
     margin-left: var(--sidebar-width);
     padding: var(--main-padding);
     flex-grow: 1;
@@ -40,6 +40,7 @@ body {
     box-sizing: border-box;
     padding-top: 40px; 
 }
+
 
 /* SIDEBAR Y MENÚ */
 .navbar {
@@ -49,11 +50,8 @@ body {
     align-items: center; padding: 20px 10px; box-sizing: border-box;
 }
 .navbar-logo { margin-bottom: 25px; }
-.navbar-logo img { max-height: 150px; }
-.navbar-logo img { margin-right: 15px; }
+.navbar-logo img { max-height: 50px; }
 .navbar-menu { display: flex; flex-direction: column; width: 100%; flex-grow: 1; }
-.navbar-links { width: 100%; margin-bottom: 10px; }
-.nav-divider { border: 0; border-top: 1px solid #455a64; width: 80%; margin: 15px auto; }
 
 .nav-link, .dropbtn {
     display: block; margin: 5px 0; padding: 12px 15px; text-decoration: none;
@@ -62,56 +60,48 @@ body {
     text-align: left; width: 100%; box-sizing: border-box;
     background-color: transparent; border: none;
 }
-.nav-link.active, .dropbtn.active { background-color: var(--color-acento-principal); }
+/* Estilo activo para Devoluciones */
+a[href="devoluciones.php"], 
+.nav-link.active, 
+.dropbtn.active { background-color: var(--color-acento-principal); }
+
 .nav-link:hover, .dropbtn:hover { background-color: var(--color-acento-principal); }
 
-/* Dropdown */
-.dropdown { 
-    position: relative; 
-    width: 100%; 
-    margin-bottom: 10px; 
-}
-
+/* Dropdown (Con el espaciado corregido) */
+.dropdown { position: relative; width: 100%; margin-bottom: 10px; }
 .dropdown-content {
-    display: none; 
-    position: relative; 
-    background-color: #3e5265;
-    /* QUITAMOS EL PADDING VERTICAL DEL CONTENEDOR */
-    width: 100%; 
-    padding: 0; 
-    border-radius: 0 0 6px 6px;
-    /* AJUSTE PARA ORDENAR MEJOR EL CONTENIDO */
+    display: none; position: relative; background-color: #3e5265;
+    width: 100%; padding: 0; border-radius: 0 0 6px 6px;
     overflow: hidden; 
 }
 .dropdown:hover .dropdown-content, .dropdown-content.show { display: block; }
 
 .dropdown-content a {
-    /* CLAVE: FUERZA EL TEXTO A NO ROMPERSE EN LÍNEAS */
     white-space: nowrap; 
-    /* CLAVE: ASEGURA QUE CADA ENLACE OCUPE SU PROPIA LÍNEA COMPLETA */
     display: block; 
-    
-    padding: 10px 15px 10px 30px; /* AUMENTAMOS LIGERAMENTE EL PADDING VERTICAL (10px) */
+    padding: 10px 15px 10px 30px; 
     font-size: 14px; 
     font-weight: 400;
     color: var(--color-texto-claro);
     text-decoration: none;
     transition: background-color 0.2s;
 }
+.dropdown-content a:hover, .dropdown-content a.active { background-color: var(--color-acento-secundario); }
 
-.dropdown-content a:hover, .dropdown-content a.active { 
-    background-color: var(--color-acento-secundario); 
+/* Logout */
+.btn-general.btn-logout { 
+    background: var(--color-error); 
+    color: var(--color-texto-claro) !important; 
+    padding: 8px 15px; border-radius: 6px; display: block; 
+    width: 90%; margin: 15px auto; 
+    text-decoration: none; font-size: 14px; font-weight: 600; 
+    transition: background-color 0.3s;
 }
-
-/* Info y Logout */
-.navbar-user-info { margin-top: auto; width: 100%; padding-top: 15px; border-top: 1px solid #455a64; text-align: center; }
-.navbar-user-info .user-text { display: block; color: var(--color-borde); margin-bottom: 8px; font-size: 0.9em; }
-.btn-logout { background: var(--color-error); color: var(--color-texto-claro) !important; padding: 8px 15px; border-radius: 6px; display: inline-block; width: 90%; text-decoration: none; font-size: 14px; font-weight: 600; }
-.btn-logout:hover { background: #b02a37; }
+.btn-general.btn-logout:hover { background: #b02a37; }
 
 
 /* ====================================================================
-    2. ESTILOS DE COMPRAS
+    2. ESTILOS ESPECÍFICOS DE DEVOLUCIONES
 ==================================================================== */
 
 h2 { color: var(--color-texto-oscuro); margin-bottom: 20px; }
@@ -129,99 +119,108 @@ h2 { color: var(--color-texto-oscuro); margin-bottom: 20px; }
 .card h3 { color: var(--color-acento-secundario); margin-top: 0; margin-bottom: 15px; }
 
 /* Mensajes de Alerta */
-.hidden-message { display: none; }
 .alert-custom-danger { background: #f8d7da; color: var(--color-error); padding: 12px; border-radius: 6px; margin-bottom: 20px; border: 1px solid #f5c6cb; font-weight: 600; }
-.alert-custom-success { background: #d4edda; color: var(--color-exito); padding: 12px; border-radius: 6px; margin-bottom: 20px; border: 1px solid #c3e6cb; font-weight: 600; }
-.text-center { text-align: center; }
 
-/* Encabezado de Compra */
-.grid-2-cols {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-}
-.card-encabezado label {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 5px;
-}
+/* Búsqueda de Folio */
+.flex-row { display: flex; gap: 10px; align-items: center; }
+.flex-grow { flex-grow: 1; }
 
-.input-padded, .select-padded {
+.flex-row input[type="text"] {
     width: 100%; padding: 10px; 
     border: 1px solid var(--color-borde); border-radius: 6px;
     font-size: 15px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
     box-sizing: border-box;
 }
-.input-padded:focus, .select-padded:focus { 
+.flex-row input:focus { 
     border-color: var(--color-acento-principal);
     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
     outline: none;
 }
 
-/* Detalle de Compra (Búsqueda) */
-.search-row { display: flex; gap: 10px; align-items: center; }
-.flex-row { display: flex; gap: 10px; align-items: center; }
-.btn-add-item { min-width: 150px; background-color: #ffc107; color: var(--color-texto-oscuro) !important; }
-.btn-add-item:hover { background-color: #e0a800; }
-
 /* Tabla de Detalle */
-.table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 table {
     width: 100%; border-collapse: collapse; margin-top: 15px;
     border: 1px solid var(--color-borde); border-radius: 8px;
-    overflow: hidden; min-width: 700px;
+    overflow: hidden; 
 }
-th { background: #e9ecef; color: var(--color-texto-oscuro); text-align: left; }
+th { 
+    background: #e9ecef; 
+    color: var(--color-texto-oscuro); 
+    text-align: left;
+    white-space: nowrap;
+}
 th, td { padding: 10px; border-bottom: 1px solid #eee; font-size: 14px; vertical-align: middle; }
 tr:last-child td { border-bottom: none; }
 
-/* Columnas */
-.col-35 { width: 35%; }
-.col-15 { width: 15%; }
-.col-10 { width: 10%; }
+.text-center { text-align: center; }
 .text-right { text-align: right; }
 
-/* Inputs en Tabla */
-.input-cant-compra, .input-costo-compra {
-    padding: 5px; text-align: center; font-size: 14px;
-    border: 1px solid var(--color-borde); border-radius: 4px;
-}
-.input-costo-compra { text-align: right; }
-
-/* Botón Quitar */
-.btn-desactivar { 
-    background: var(--color-error); 
-    color: var(--color-texto-claro) !important; 
-    padding: 5px 8px;
-    border: none;
+/* Input de Cantidad a Devolver */
+#form-devolucion input[type="number"] {
+    width: 60px; /* Ancho específico para cantidad */
+    padding: 5px; 
+    text-align: center; 
+    font-size: 14px;
+    border: 1px solid var(--color-borde); 
     border-radius: 4px;
-    font-size: 13px;
+    box-sizing: border-box;
+}
+#form-devolucion input[type="number"]:disabled {
+    background-color: #f1f1f1;
+    cursor: not-allowed;
+}
+
+/* Motivo de Devolución */
+#motivo_devolucion {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--color-borde);
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 15px;
+}
+#motivo_devolucion:focus { 
+    border-color: var(--color-acento-principal);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+/* Botón Procesar Devolución (Éxito/Verde) */
+#btn-procesar-devolucion {
+    background: var(--color-exito);
+    color: var(--color-texto-claro) !important;
+}
+#btn-procesar-devolucion:hover { 
+    background: #1e7e34; 
+}
+
+/* Botones Generales */
+.btn-general {
+    background: var(--color-acento-principal);
+    color: var(--color-texto-claro) !important;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
     font-weight: 600;
     cursor: pointer;
     transition: 0.3s;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
 }
-.btn-desactivar:hover { background: #b02a37; }
-
-/* Resumen y Botón de Procesar */
-.total-summary {
-    text-align: right;
-    font-size: 1.5em;
-    font-weight: 700;
-    margin-top: 20px;
-    color: var(--color-acento-principal);
-}
-.btn-process {
-    background: var(--color-exito);
-    font-size: 1.1em;
-    padding: 12px;
-}
-.btn-process:hover { background: #1e7e34; }
+.btn-general:hover { background: var(--color-acento-secundario); }
 
 /* Utilidades */
 .w-150 { width: 150px; }
 .w-full { width: 100%; }
+.mt-15 { margin-top: 15px; }
 .mt-20 { margin-top: 20px; }
-.mb-15 { margin-bottom: 15px; }
+.mb-20 { margin-bottom: 20px; }
+
+/* Línea divisoria en la tarjeta */
+.card hr { border: none; border-top: 1px solid #eee; margin: 15px 0; }
+
 
 /* ====================================================================
     3. RESPONSIVE (Móvil)
@@ -232,28 +231,23 @@ tr:last-child td { border-bottom: none; }
 @media (max-width: 768px) {
     /* Layout Móvil */
     .navbar { position: fixed; top: 0; left: 0; width: 100%; height: 70px; flex-direction: row; justify-content: space-between; align-items: center; background: var(--color-fondo); box-shadow: 0 0 8px rgba(0, 0, 0, 0.1); border-bottom: 3px solid var(--color-acento-principal); padding: 0 15px; }
-    .navbar-logo { margin-bottom: 0; }
     .navbar-logo img { height: 40px; }
-    .navbar-user-info { display: none; }
-    .main-content-wrapper { margin-left: 0; margin-top: 80px; width: 100%; padding: 15px; }
-    .menu-toggle { display: flex; right: 80px; top: 15px; }
+    .main-container { margin-left: 0; margin-top: 80px; width: 100%; padding: 15px; }
+    .menu-toggle { display: flex; right: 20px; top: 15px; } 
     .menu-toggle span { background-color: var(--color-acento-principal); }
     .navbar-menu { display: none; position: absolute; top: 70px; left: 0; width: 100%; background-color: var(--color-fondo); flex-direction: column; align-items: center; padding: 20px 0; box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1); border-top: 1px solid var(--color-borde); z-index: 9999; }
     .navbar-menu.active { display: flex; }
     .nav-link, .dropbtn { color: var(--color-texto-oscuro) !important; width: 90%; text-align: center; padding: 15px; margin: 5px auto; }
     .dropdown-content { position: relative; background-color: #f1f1f1; width: 100%; }
     .dropdown-content a { color: var(--color-texto-oscuro); }
-    .dropdown-content a.active { background-color: var(--color-acento-principal); color: var(--color-texto-claro); }
 
-    /* Estilos de Compra Móvil */
-    .grid-2-cols { grid-template-columns: 1fr; }
-    .search-row { flex-direction: column; }
-    .search-row .input-padded, .search-row .btn-add-item { width: 100%; }
+    /* Contenido Móvil */
+    .flex-row { flex-direction: column; }
+    .flex-row input[type="text"], .flex-row .btn-general { width: 100%; }
 
-    /* Tabla de Detalle Móvil */
-    table { min-width: 550px; } 
-    .input-cant-compra, .input-costo-compra { width: 100% !important; }
-    .btn-desactivar { width: 100%; }
-    
-    .total-summary { font-size: 1.2em; }
+    /* Tabla Móvil */
+    table { overflow-x: auto; display: block; white-space: nowrap; }
+    table thead, table tbody, table tr { display: block; }
+    table td, table th { display: inline-block; width: auto; }
+    /* Ajustes específicos para la tabla de devoluciones en móvil si es necesario */
 }

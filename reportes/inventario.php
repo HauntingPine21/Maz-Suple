@@ -57,144 +57,180 @@ while ($row = $resultado->fetch_assoc()) {
 
 $total_items = count($productos);
 
-// ===============================
-// CONTENIDO DEL REPORTE
-// ===============================
+// ==========================================================
+// INICIO DEL HTML (Estructura de Plantilla con Sidebar)
+// ==========================================================
 $titulo_reporte = "REPORTE DE INVENTARIO ACTUAL";
-ob_start();
 ?>
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Maz-Suple | <?php echo $titulo_reporte; ?></title>
+    <link rel="stylesheet" href="../css/inventarioReportes.css"> 
+</head>
 
-
-<link rel="stylesheet" href="../css/styles.css">
-
-
-<div class="card filtros-print mb-20">
-    <h3 class="mb-15">Filtros de Inventario</h3>
-
-    <form method="GET">
-
-        <div class="filters-container">
-
-            <!-- Buscar -->
-            <div class="filter-group-large">
-                <label for="q">Buscar Suplemento</label>
-                <input 
-                    type="text"
-                    id="q" 
-                    name="q" 
-                    placeholder="Código o Nombre..." 
-                    class="filter-input"
-                    value="<?php echo htmlspecialchars($filtro_q); ?>"
-                >
-            </div>
-
-            <!-- Estado del stock -->
-            <div class="filter-group">
-                <label for="stock">Estado de Stock (Solo visual)</label>
-                <select id="stock" name="stock" class="filter-input">
-                    <option value="todos"   <?php if ($filtro_stock === 'todos')   echo 'selected'; ?>>Todos</option>
-                    <option value="bajo"    <?php if ($filtro_stock === 'bajo')    echo 'selected'; ?>>Stock Bajo</option>
-                    <option value="agotado" <?php if ($filtro_stock === 'agotado') echo 'selected'; ?>>Agotado</option>
-                </select>
-            </div>
-
-            <!-- Botones -->
-            <button type="submit" class="btn-general w-150">Filtrar</button>
-
-            <button type="button" class="btn-general w-150 btn-print">
-                Imprimir / PDF
-            </button>
-
-            <?php 
-                $csv_url = "../reportes/exportar.php?tipo=inventario"
-                         . "&q=" . urlencode($filtro_q)
-                         . "&activos=" . ($solo_activos ? "1" : "0");
-            ?>
-            <a href="<?php echo $csv_url; ?>" class="btn-general w-150">
-                Exportar CSV
-            </a>
+<body>
+    
+    <div class="navbar">
+        <div class="navbar-logo">
+            <img src="../assets/img/logo-maria-de-letras_v2.svg" alt="Logo de María de Letras">
         </div>
-    </form>
-</div>
+        
+        <div class="navbar-menu">
+            <a href="../ventas.php" class="nav-link">Punto de ventas</a>
+            <a href="../productos.php" class="nav-link">Productos</a>
+            <a href="../compras.php" class="nav-link">Compras</a>
+            <a href="../devoluciones.php" class="nav-link">Devoluciones</a>
+            <a href="../usuarios.php" class="nav-link">Usuarios</a>
 
-<!-- Tabla -->
-<div class="card">
-    <p class="font-bold text-sm">
-        Total de Suplementos: <?php echo $total_items; ?>
-    </p>
-
-    <div class="table-responsive">
-        <table>
-            <thead>
-                <tr class="bg-green">
-                    <th class="w-150">Código</th>
-                    <th>Nombre del Suplemento</th>
-                    <th class="w-120 text-right">Precio Venta</th>
-                    <th class="w-100 text-center">Stock Actual</th>
-                    <th class="w-150 text-right">Valor Inventario</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                <?php if ($total_items > 0): ?>
-                    <?php foreach ($productos as $producto): ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($producto['codigo']); ?></td>
-                        <td><?php echo htmlspecialchars($producto['nombre']); ?></td>
-
-                        <td class="text-right">
-                            $<?php echo number_format($producto['precio'], 2); ?>
-                        </td>
-
-                        <td class="text-center">
-                            <?php echo number_format($producto['existencia'], 0); ?>
-
-                            <?php if ($producto['existencia'] <= 5 && $producto['existencia'] > 0): ?>
-                                <span class="font-bold text-danger">(Bajo)</span>
-                            <?php elseif ($producto['existencia'] == 0): ?>
-                                <span class="font-bold text-danger">(Agotado)</span>
-                            <?php endif; ?>
-                        </td>
-
-                        <td class="text-right">
-                            $<?php echo number_format($producto['valor_linea'], 2); ?>
-                        </td>
-                    </tr>
-                    <?php endforeach; ?>
-
-                <?php else: ?>
-                    <tr>
-                        <td colspan="5" class="text-center">
-                            No se encontraron suplementos con los filtros aplicados.
-                        </td>
-                    </tr>
-                <?php endif; ?>
-            </tbody>
-
-            <tfoot>
-                <tr>
-                    <td colspan="4" class="text-right font-bold bg-light-green">
-                        VALOR TOTAL DEL INVENTARIO
-                    </td>
-                    <td class="text-right font-bold bg-light-green">
-                        $<?php echo number_format($valor_total_inventario, 2); ?>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td colspan="4" class="text-right font-bold bg-light-gray">
-                        TOTAL UNIDADES EN STOCK
-                    </td>
-                    <td class="text-right font-bold bg-light-gray">
-                        <?php echo number_format($total_existencias, 0); ?>
-                    </td>
-                </tr>
-            </tfoot>
-        </table>
+            <div class="nav-divider"></div>
+            
+            <div class="dropdown">
+                <button class="dropbtn active">Reportes</button>
+                <div class="dropdown-content show">
+                    <a href="compras.php">Reporte compras</a>
+                    <a href="devoluciones.php">Reporte devoluciones</a>
+                    <a href="inventario.php" class="active">Reporte inventario</a>
+                    <a href="ventas_detalle.php">Reporte detalle</a>
+                    <a href="ventas_encabezado.php">Reporte encabezado</a>
+                </div>
+            </div>
+            <div class="navbar-user-info">
+                <span class="user-text">Usuario: Administrador</span>
+                <a href="../index.php" class="btn-logout">Cerrar Sesión</a>
+            </div>
+        </div>
     </div>
-</div>
+    
+    <div class="main-container"> 
+        
+        <div class="report-header">
+             <h1 class="report-title"><?php echo $titulo_reporte; ?></h1>
+             </div>
 
-<?php
-$contenido_reporte = ob_get_clean();
-require_once 'plantilla.php';
-?>
+        <div class="card filtros-print mb-20">
+            <h3 class="mb-15">Filtros de Inventario</h3>
+
+            <form method="GET">
+
+                <div class="filters-container">
+
+                    <div class="filter-group-large">
+                        <label for="q">Buscar Suplemento</label>
+                        <input 
+                            type="text"
+                            id="q" 
+                            name="q" 
+                            placeholder="Código o Nombre..." 
+                            class="filter-input"
+                            value="<?php echo htmlspecialchars($filtro_q); ?>"
+                        >
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="stock">Estado de Stock (Solo visual)</label>
+                        <select id="stock" name="stock" class="filter-input">
+                            <option value="todos"   <?php if ($filtro_stock === 'todos')   echo 'selected'; ?>>Todos</option>
+                            <option value="bajo"    <?php if ($filtro_stock === 'bajo')    echo 'selected'; ?>>Stock Bajo</option>
+                            <option value="agotado" <?php if ($filtro_stock === 'agotado') echo 'selected'; ?>>Agotado</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-general w-150">Filtrar</button>
+
+                    <button type="button" class="btn-general w-150 btn-print">
+                        Imprimir / PDF
+                    </button>
+
+                    <?php 
+                        $csv_url = "../reportes/exportar.php?tipo=inventario"
+                                 . "&q=" . urlencode($filtro_q)
+                                 . "&activos=" . ($solo_activos ? "1" : "0");
+                    ?>
+                    <a href="<?php echo $csv_url; ?>" class="btn-general w-150">
+                        Exportar CSV
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <div class="card">
+            <p class="font-bold text-sm">
+                Total de Suplementos: <?php echo $total_items; ?>
+            </p>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr class="bg-green">
+                            <th class="w-150">Código</th>
+                            <th>Nombre del Suplemento</th>
+                            <th class="w-120 text-right">Precio Venta</th>
+                            <th class="w-100 text-center">Stock Actual</th>
+                            <th class="w-150 text-right">Valor Inventario</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <?php if ($total_items > 0): ?>
+                            <?php foreach ($productos as $producto): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($producto['codigo']); ?></td>
+                                <td><?php echo htmlspecialchars($producto['nombre']); ?></td>
+
+                                <td class="text-right">
+                                    $<?php echo number_format($producto['precio'], 2); ?>
+                                </td>
+
+                                <td class="text-center">
+                                    <?php echo number_format($producto['existencia'], 0); ?>
+
+                                    <?php if ($producto['existencia'] <= 5 && $producto['existencia'] > 0): ?>
+                                        <span class="font-bold text-danger">(Bajo)</span>
+                                    <?php elseif ($producto['existencia'] == 0): ?>
+                                        <span class="font-bold text-danger">(Agotado)</span>
+                                    <?php endif; ?>
+                                </td>
+
+                                <td class="text-right">
+                                    $<?php echo number_format($producto['valor_linea'], 2); ?>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="5" class="text-center">
+                                    No se encontraron suplementos con los filtros aplicados.
+                                </td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+
+                    <tfoot>
+                        <tr>
+                            <td colspan="4" class="text-right font-bold bg-light-green">
+                                VALOR TOTAL DEL INVENTARIO
+                            </td>
+                            <td class="text-right font-bold bg-light-green">
+                                $<?php echo number_format($valor_total_inventario, 2); ?>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="4" class="text-right font-bold bg-light-gray">
+                                TOTAL UNIDADES EN STOCK
+                            </td>
+                            <td class="text-right font-bold bg-light-gray">
+                                <?php echo number_format($total_existencias, 0); ?>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+    </div> </body>
+</html>
