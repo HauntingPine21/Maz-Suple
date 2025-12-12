@@ -32,7 +32,7 @@ while ($row = $res_cajeros->fetch_assoc()) {
 // 3. Obtener Devoluciones según filtros
 // ======================
 // ASUMIMOS TABLA 'devoluciones' con campos 'total_devuelto', 'id_usuario', 'motivo'
-$sql = "SELECT d.id AS folio, d.fecha_hora, d.total_devuelto, u.nombre_completo AS cajero, d.motivo
+$sql = "SELECT d.id AS folio, d.fecha_hora, d.total_reembolsado, u.nombre_completo AS cajero, d.motivo
         FROM devoluciones d
         JOIN usuarios u ON d.id_usuario = u.id
         WHERE DATE(d.fecha_hora) BETWEEN ? AND ?";
@@ -59,7 +59,7 @@ while ($row = $res->fetch_assoc()) {
 // ======================
 $num_devoluciones = count($devoluciones);
 foreach ($devoluciones as $d) {
-    $suma_total_devuelto += $d['total_devuelto'];
+    $suma_total_devuelto += $d['total_reembolsado'];
 }
 if ($num_devoluciones > 0) {
     $ticket_promedio_dev = $suma_total_devuelto / $num_devoluciones;
@@ -82,7 +82,7 @@ if ($num_devoluciones > 0) {
     
     <div class="navbar">
         <div class="navbar-logo">
-            <img src="../assets/ImgLogo.png" alt="Logo">
+            <img src="../assets/img/logo-maria-de-letras_v2.svg" alt="Logo de María de Letras">
         </div>
         
         <div class="navbar-menu">
@@ -175,7 +175,7 @@ if ($num_devoluciones > 0) {
                                 <td><?= date("d/m/Y H:i:s", strtotime($d['fecha_hora'])) ?></td>
                                 <td><?= htmlspecialchars($d['cajero']) ?></td>
                                 <td><?= htmlspecialchars($d['motivo']) ?></td>
-                                <td class="text-right font-bold">$<?= number_format($d['total_devuelto'], 2) ?></td>
+                                <td class="text-right font-bold">$<?= number_format($d['total_reembolsado'], 2) ?></td>
                             </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
