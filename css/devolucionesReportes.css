@@ -75,7 +75,7 @@ a[href="devoluciones.php"],
     width: 100%; padding: 0; border-radius: 0 0 6px 6px;
     overflow: hidden; 
 }
-.dropdown:hover .dropdown-content, .dropdown-content.show { display: block; }
+.dropdown-content.show { display: block; }
 
 .dropdown-content a {
     white-space: nowrap; 

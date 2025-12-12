@@ -24,28 +24,40 @@ document.addEventListener('DOMContentLoaded', function () {
 
     dropdownBtns.forEach(btn => {
         btn.addEventListener('click', function (e) {
-            if (window.innerWidth <= 768) {
-                e.preventDefault();
-                e.stopPropagation();
+            e.stopPropagation(); // Evita que el clic se propague al documento
 
-                const dropdownContent = this.nextElementSibling;
-                const abierto = dropdownContent.classList.contains('show');
+            const dropdownContent = this.nextElementSibling;
+            
+            // Cerrar otros menús abiertos
+            document.querySelectorAll('.dropdown-content.show').forEach(openDropdown => {
+                if (openDropdown !== dropdownContent) {
+                    openDropdown.classList.remove('show');
+                }
+            });
 
-                document.querySelectorAll('.dropdown-content').forEach(c => c.classList.remove('show'));
-
-                if (!abierto) dropdownContent.classList.add('show');
-            }
+            // Alternar el menú actual
+            dropdownContent.classList.toggle('show');
         });
     });
 
     // ==========================================
-    // CERRAR MENÚ
+    // CERRAR MENÚ AL HACER CLIC FUERA
     // ==========================================
     document.addEventListener('click', function (e) {
+        // Cierra todos los dropdowns si el clic no es en un botón de dropdown
+        if (!e.target.matches('.dropbtn')) {
+            document.querySelectorAll('.dropdown-content.show').forEach(dropdown => {
+                dropdown.classList.remove('show');
+            });
+        }
+        
+        // Lógica del menú hamburguesa para móviles
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const navbarMenu = document.getElementById('navbar-menu');
+
         if (window.innerWidth <= 768) {
             if (navbarMenu && !navbarMenu.contains(e.target) && e.target !== menuBtn) {
                 navbarMenu.classList.remove('active');
-                document.querySelectorAll('.dropdown-content').forEach(c => c.classList.remove('show'));
             }
         }
     });

@@ -228,5 +228,7 @@ $titulo_reporte = "REPORTE DE INVENTARIO ACTUAL";
             </div>
         </div>
 
-    </div> </body>
+    </div> 
+    <script src="../js/offline_manager.js?v=<?php echo time(); ?>"></script>
+</body>
 </html>

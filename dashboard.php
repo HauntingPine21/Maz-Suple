@@ -76,13 +76,13 @@ $rol = $usuario['rol'];
             <div class="card card-action">
                 <h3>Punto de Venta</h3>
                 <p>Realizar ventas rápidas, cobrar y emitir tickets.</p>
-                <a href="ventas.php" class="btn-general w-full">Ir a Caja</a>
+                <a href="ventas.php" class="btn-general">Ir a Caja</a>
             </div>
 
             <div class="card card-action">
                 <h3>Devoluciones</h3>
                 <p>Gestionar devoluciones de suplementos.</p>
-                <a href="devoluciones.php" class="btn-general w-full">Ir a Devoluciones</a>
+                <a href="devoluciones.php" class="btn-general">Ir a Devoluciones</a>
             </div>
         </div>
 

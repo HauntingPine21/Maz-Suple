@@ -228,20 +228,7 @@ while ($row = $resultado->fetch_assoc()) {
     </div>
 </main>
 
-<script src="js/main.js"></script>
-<script>
-    // Confirmaciones dinámicas
-    document.querySelectorAll('.btn-confirm-action').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            if (!confirm(this.dataset.confirmMessage)) {
-                e.preventDefault();
-            }
-        });
-    });
-    // Script para la barra de navegación móvil (se puede mover a main.js)
-    document.getElementById('mobile-menu-btn').addEventListener('click', function() {
-        document.getElementById('navbar-menu').classList.toggle('active');
-    });
-</script>
+<script src="js/main.js?v=<?php echo time(); ?>"></script>
+<script src="js/offline_manager.js?v=<?php echo time(); ?>"></script>
 </body>
 </html>

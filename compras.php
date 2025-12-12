@@ -165,7 +165,8 @@ $suplementos_json = json_encode($suplementos);
     </div>
 </main>
 
-<script src="js/main.js"></script>
+<script src="js/main.js?v=<?php echo time(); ?>"></script>
+<script src="js/offline_manager.js?v=<?php echo time(); ?>"></script>
 <script>
     // Inyectamos la lista de suplementos desde PHP a JS
     const PRODUCTOS_LIST = <?= $suplementos_json ?>;
@@ -349,10 +350,7 @@ $suplementos_json = json_encode($suplementos);
             window.scrollTo(0, 0); // Ir arriba para ver el mensaje
         });
         
-        // Inicializar barra móvil
-        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
-            document.getElementById('navbar-menu').classList.toggle('active');
-        });
+        // Mobile menu is handled by offline_manager.js
     });
 </script>
 </body>

@@ -255,18 +255,7 @@ $productos = $mysqli->query($sql_suplementos);
     </div>
 </main>
 
-<script src="js/main.js"></script>
-<script>
-    document.querySelectorAll('.btn-confirm-action').forEach(btn => {
-        btn.addEventListener('click', function(event) {
-            const message = this.getAttribute('data-confirm-message');
-            if (!confirm(message)) event.preventDefault();
-        });
-    });
-
-    document.getElementById('mobile-menu-btn').addEventListener('click', function() {
-        document.getElementById('navbar-menu').classList.toggle('active');
-    });
-</script>
+<script src="js/main.js?v=<?php echo time(); ?>"></script>
+<script src="js/offline_manager.js?v=<?php echo time(); ?>"></script>
 </body>
 </html>

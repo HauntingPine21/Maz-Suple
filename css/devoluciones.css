@@ -95,7 +95,7 @@ body {
     /* AJUSTE PARA ORDENAR MEJOR EL CONTENIDO */
     overflow: hidden; 
 }
-.dropdown:hover .dropdown-content, .dropdown-content.show { display: block; }
+.dropdown-content.show { display: block; }
 
 .dropdown-content a {
     /* CLAVE: FUERZA EL TEXTO A NO ROMPERSE EN LÍNEAS */

@@ -225,5 +225,7 @@ while ($row = $res->fetch_assoc()) {
             </div>
         </div>
 
-    </div> </body>
+    </div> 
+    <script src="../js/offline_manager.js?v=<?php echo time(); ?>"></script>
+</body>
 </html>

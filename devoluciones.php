@@ -218,7 +218,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['folio_input'])) {
 <?php endif; ?>
 </main>
 
-<script src="js/main.js"></script>
+<script src="js/main.js?v=<?php echo time(); ?>"></script>
+<script src="js/offline_manager.js?v=<?php echo time(); ?>"></script>
 <script>
 // Habilitar input si el checkbox está marcado
 document.querySelectorAll('.check-devolucion').forEach(ch => {
