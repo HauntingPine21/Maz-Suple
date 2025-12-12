@@ -18,12 +18,11 @@ if (!isset($_SESSION['carrito'])) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Maz Suplementos | Punto de Venta</title>
-<<<<<<< HEAD
+
     <link rel="stylesheet" href="css/ventas.css?v=<?php echo time(); ?>">
-=======
+
     <link rel="stylesheet" href="css/ventas.css">
     <link rel="icon" type="image/png" href="assets/img/logo-mazsuplementos_icon.svg">
->>>>>>> 4188564d17e763eec2dea557988f7a85796236c8
   </head>
 
   <body>
@@ -44,25 +43,24 @@ if (!isset($_SESSION['carrito'])) {
             </button>
             
             <div class="navbar-links">
-                <a href="dashboard.php" class="nav-link">🏠 Inicio</a>
-                <a href="ventas.php" class="nav-link active">🛒 Punto de Venta</a>
-                <a href="devoluciones.php" class="nav-link">↩️ Devoluciones</a>
+                <a href="dashboard.php" class="nav-link"> Inicio</a>
+                <a href="ventas.php" class="nav-link active"> Punto de Venta</a>
+                <a href="devoluciones.php" class="nav-link"> Devoluciones</a>
             </div>
 
             <?php if ($rol === 'admin'): ?>
                 <hr class="nav-divider">
                 <div class="dropdown">
-                    <button class="dropbtn">⚙️ Gestión ▾</button>
+                    <button class="dropbtn"> Gestión ▾</button>
                     <div class="dropdown-content">
                         <a href="productos.php">Productos</a>
                         <a href="compras.php">Compras</a>
                         <a href="usuarios.php">Usuarios</a>
-                        <a href="proveedores.php">Proveedores</a>
                     </div>
                 </div>
 
                 <div class="dropdown">
-                    <button class="dropbtn">📈 Reportes ▾</button>
+                    <button class="dropbtn">Reportes ▾</button>
                     <div class="dropdown-content">
                         <a href="reportes/compras.php">Compras</a>
                         <a href="reportes/devoluciones.php">Devoluciones</a>

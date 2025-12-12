@@ -26,6 +26,7 @@ $rol = $usuario['rol'];
         </div>
         
         <div class="navbar-menu">
+            <a href="dashboard.php" class="nav-link active">Inicio</a>
             <a href="ventas.php">Punto de Venta</a>
             <a href="devoluciones.php">Devoluciones</a>
             

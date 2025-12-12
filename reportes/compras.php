@@ -43,18 +43,18 @@ if ($res_supp = $mysqli->query($sql_supp)) {
         <div class="dropdown">
             <button class="dropbtn">Cajero ▾</button>
             <div class="dropdown-content">
-                <a href="dashboard.php">Inicio</a>
-                <a href="ventas.php">Punto de Venta</a>
-                <a href="devoluciones.php">Devoluciones</a>
+                <a href="../dashboard.php">Inicio</a>
+                <a href="../ventas.php">Punto de Venta</a>
+                <a href="../devoluciones.php">Devoluciones</a>
             </div>
         </div>
         <?php if ($rol === 'admin'): ?>
             <div class="dropdown">
                 <button class="dropbtn">Gestión ▾</button>
                 <div class="dropdown-content">
-                    <a href="productos.php">Suplementos</a>
-                    <a href="compras.php">Compras</a>
-                    <a href="usuarios.php">Usuarios</a>
+                    <a href="../productos.php">Suplementos</a>
+                    <a href="../compras.php">Compras</a>
+                    <a href="../usuarios.php">Usuarios</a>
                 </div>
             </div>
             <div class="dropdown">

@@ -72,15 +72,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['folio_input'])) {
 
     <div class="navbar-menu" id="navbar-menu">
         <div class="navbar-links">
-            <a href="dashboard.php" class="nav-link">🏠 Inicio</a>
-            <a href="ventas.php" class="nav-link">🛒 Punto de Venta</a>
-            <a href="devoluciones.php" class="nav-link active">↩️ Devoluciones</a>
+            <a href="dashboard.php" class="nav-link"> Inicio</a>
+            <a href="ventas.php" class="nav-link">Punto de Venta</a>
+            <a href="devoluciones.php" class="nav-link active">Devoluciones</a>
         </div>
         
         <?php if ($rol === 'admin'): ?>
         <hr class="nav-divider">
         <div class="dropdown">
-            <button class="dropbtn">⚙️ Gestión ▾</button>
+            <button class="dropbtn"> Gestión ▾</button>
             <div class="dropdown-content">
                 <a href="productos.php">Productos</a>
                 <a href="compras.php">Compras</a>
@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['folio_input'])) {
         </div>
 
         <div class="dropdown">
-            <button class="dropbtn">📈 Reportes ▾</button>
+            <button class="dropbtn">Reportes ▾</button>
             <div class="dropdown-content">
                 <a href="reportes/compras.php">Reportes Compra</a>
                 <a href="reportes/devoluciones.php">Reportes Devoluciones</a>

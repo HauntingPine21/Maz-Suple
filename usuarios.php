@@ -100,15 +100,15 @@ while ($row = $resultado->fetch_assoc()) {
 
     <div class="navbar-menu" id="navbar-menu">
         <div class="navbar-links">
-            <a href="dashboard.php" class="nav-link">🏠 Inicio</a>
-            <a href="ventas.php" class="nav-link">🛒 Punto de Venta</a>
-            <a href="devoluciones.php" class="nav-link">↩️ Devoluciones</a>
+            <a href="dashboard.php" class="nav-link">Inicio</a>
+            <a href="ventas.php" class="nav-link">Punto de Venta</a>
+            <a href="devoluciones.php" class="nav-link">Devoluciones</a>
         </div>
         
         <?php if ($rol === 'admin'): ?>
         <hr class="nav-divider">
         <div class="dropdown">
-            <button class="dropbtn active">⚙️ Gestión ▾</button>
+            <button class="dropbtn active">Gestión ▾</button>
             <div class="dropdown-content show">
                 <a href="productos.php">Productos</a>
                 <a href="compras.php">Compras</a>
@@ -117,7 +117,7 @@ while ($row = $resultado->fetch_assoc()) {
         </div>
 
         <div class="dropdown">
-            <button class="dropbtn">📈 Reportes ▾</button>
+            <button class="dropbtn">Reportes ▾</button>
             <div class="dropdown-content">
                 <a href="reportes/compras.php">Compras</a>
                 <a href="reportes/devoluciones.php">Devoluciones</a>
