@@ -1,74 +1,78 @@
 <?php
 session_start();
 require_once '../config/db.php';
+require_once '../includes/seguridad_basica.php';
 
 header('Content-Type: application/json');
 
-// Validación básica
-if (empty($_SESSION['carrito']) || !isset($_SESSION['user'])) {
-    echo json_encode(['status' => 'error', 'msg' => 'Carrito vacío o sesión caducada']);
+// Leer JSON del body
+$data = json_decode(file_get_contents('php://input'), true);
+
+// Validaciones básicas
+if (!isset($_SESSION['user'])) {
+    echo json_encode(['status'=>'error','msg'=>'Sesión caducada']);
+    exit;
+}
+
+if (!isset($data['items']) || !is_array($data['items']) || count($data['items']) === 0) {
+    echo json_encode(['status'=>'error','msg'=>'Carrito vacío']);
     exit;
 }
 
 $id_usuario = $_SESSION['user']['id'];
-$carrito = $_SESSION['carrito'];
-
-// Recalcular totales
-$subtotal = 0;
-foreach ($carrito as $item) {
-    $subtotal += $item['costo'] * $item['cantidad']; // costo enviado desde JS
-}
-$iva = $subtotal * 0.16; // Ajusta si tu IVA cambia
-$total = $subtotal + $iva;
+$items = $data['items'];
 
 $mysqli->begin_transaction();
 
 try {
-    // 1. Insertar encabezado de venta
-    $sql_venta = "INSERT INTO ventas (id_usuario, subtotal, iva, total, fecha_hora) 
-                  VALUES (?, ?, ?, ?, NOW())";
-    $stmt = $mysqli->prepare($sql_venta);
-    $stmt->bind_param("iddd", $id_usuario, $subtotal, $iva, $total);
-    $stmt->execute();
+    // Crear encabezado de venta
+    $stmt = $mysqli->prepare("INSERT INTO ventas (id_usuario, subtotal, iva, total, fecha_hora) VALUES (?,0,0,0,NOW())");
+    $stmt->bind_param("i", $id_usuario);
+    if (!$stmt->execute()) throw new Exception("Error al crear venta");
     $id_venta = $mysqli->insert_id;
 
-    // 2. Preparar statements de detalle y stock
-    $sql_detalle = "INSERT INTO detalle_ventas (id_venta, id_suplemento, cantidad, precio_unitario, importe) 
-                    VALUES (?, ?, ?, ?, ?)";
-    $stmt_det = $mysqli->prepare($sql_detalle);
+    $subtotal_total = 0;
 
-    $sql_stock = "UPDATE existencias 
-                  SET cantidad = cantidad - ? 
-                  WHERE id_suplemento = ? AND cantidad >= ?";
-    $stmt_stock = $mysqli->prepare($sql_stock);
+    // Preparar statements para detalle y stock
+    $stmt_det = $mysqli->prepare("INSERT INTO detalle_ventas (id_venta, id_suplemento, cantidad, precio_unitario, importe) VALUES (?,?,?,?,?)");
+    $stmt_stock = $mysqli->prepare("UPDATE existencias SET cantidad = cantidad - ? WHERE id_suplemento=? AND cantidad>=?");
 
-    foreach ($carrito as $item) {
-        $id_suplemento = $item['id_suplemento'];
-        $cantidad = $item['cantidad'];
-        $precio = $item['costo'];
-        $importe = $precio * $cantidad;
+    foreach($items as $item){
+        $id_suplemento = intval($item['id_suplemento']);
+        $cantidad = intval($item['cantidad']);
+        $precio = floatval($item['precio'] ?? $item['precio_venta']);
+        $importe = $cantidad * $precio;
 
-        // Insertar detalle de venta
+        // Insertar detalle
         $stmt_det->bind_param("iiidd", $id_venta, $id_suplemento, $cantidad, $precio, $importe);
-        $stmt_det->execute();
+        if (!$stmt_det->execute()) throw new Exception("Error al insertar detalle para ID: $id_suplemento");
 
         // Actualizar stock
         $stmt_stock->bind_param("iii", $cantidad, $id_suplemento, $cantidad);
         $stmt_stock->execute();
 
-        if ($mysqli->affected_rows === 0) {
-            throw new Exception("Stock insuficiente para: " . $item['nombre']);
+        if ($stmt_stock->affected_rows === 0) {
+            throw new Exception("Stock insuficiente para: " . ($item['titulo'] ?? 'Producto'));
         }
+
+        $subtotal_total += $importe;
     }
 
-    // Commit final
+    $iva = round($subtotal_total * 0.16, 2);
+    $total = round($subtotal_total + $iva, 2);
+
+    $stmt_update = $mysqli->prepare("UPDATE ventas SET subtotal=?, iva=?, total=? WHERE id=?");
+    $stmt_update->bind_param("dddi", $subtotal_total, $iva, $total, $id_venta);
+    if (!$stmt_update->execute()) throw new Exception("Error al actualizar totales");
+
     $mysqli->commit();
+
+    // Limpiar carrito de sesión
     unset($_SESSION['carrito']);
 
-    echo json_encode(['status' => 'ok', 'folio' => $id_venta]);
+    echo json_encode(['status'=>'ok','folio'=>$id_venta]);
 
-} catch (Exception $e) {
+} catch(Exception $e) {
     $mysqli->rollback();
-    echo json_encode(['status' => 'error', 'msg' => $e->getMessage()]);
+    echo json_encode(['status'=>'error','msg'=>$e->getMessage()]);
 }
-?>

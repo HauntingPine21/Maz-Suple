@@ -18,7 +18,7 @@ if (!isset($_SESSION['carrito'])) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Maz Suplementos | Punto de Venta</title>
-    <link rel="stylesheet" href="css/ventas.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="css/ventas.css">
     <link rel="icon" type="image/png" href="assets/img/logo-mazsuplementos_icon.svg">
   </head>
 
@@ -98,7 +98,7 @@ if (!isset($_SESSION['carrito'])) {
                 <table>
                     <thead>
                         <tr>
-                            <th>Producto</th>
+                            <th class="col-0">Producto</th>
                             <th class="col-10">Cant.</th>
                             <th class="col-15 text-right">Precio Unit.</th>
                             <th class="col-15 text-right">Subtotal</th>
