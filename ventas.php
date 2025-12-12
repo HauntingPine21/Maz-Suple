@@ -18,12 +18,9 @@ if (!isset($_SESSION['carrito'])) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Maz Suplementos | Punto de Venta</title>
-<<<<<<< HEAD
     <link rel="stylesheet" href="css/ventas.css?v=<?php echo time(); ?>">
-=======
     <link rel="stylesheet" href="css/ventas.css">
     <link rel="icon" type="image/png" href="assets/img/logo-mazsuplementos_icon.svg">
->>>>>>> 4188564d17e763eec2dea557988f7a85796236c8
   </head>
 
   <body>
