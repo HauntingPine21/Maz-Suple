@@ -71,6 +71,7 @@ $titulo_reporte = "REPORTE DE VENTAS POR RANGO";
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Maz-Suple | <?php echo $titulo_reporte; ?></title>
     <link rel="stylesheet" href="../css/ventasEncabezadoReportes.css?v=<?php echo time(); ?>">
+    <link rel="icon" type="image/png" href="../assets/SupleIcono.png"> 
 </head>
 
 <body>

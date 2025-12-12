@@ -110,6 +110,7 @@ $productos = $mysqli->query($sql_suplementos);
     <meta charset="UTF-8">
     <title>Maz Suple | Gestión de Productos</title>
     <link rel="stylesheet" href="css/productos.css?v=<?php echo time(); ?>">
+    <link rel="icon" type="image/png" href="assets/SupleIcono.png"> 
 </head>
 <body>
     

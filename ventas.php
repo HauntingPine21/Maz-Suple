@@ -22,7 +22,7 @@ if (!isset($_SESSION['carrito'])) {
     <link rel="stylesheet" href="css/ventas.css?v=<?php echo time(); ?>">
 
     <link rel="stylesheet" href="css/ventas.css">
-    <link rel="icon" type="image/png" href="assets/img/logo-mazsuplementos_icon.svg">
+    <link rel="icon" type="image/png" href="assets/SupleIcono.png"> 
   </head>
 
   <body>
@@ -62,7 +62,7 @@ if (!isset($_SESSION['carrito'])) {
                 <div class="dropdown">
                     <button class="dropbtn">Reportes ▾</button>
                     <div class="dropdown-content">
-                        
+
                         <a href="reportes/devoluciones.php">Devoluciones</a>
                         <a href="reportes/inventario.php">Inventario</a>
                         <a href="reportes/ventas_detalle.php">Ventas Detalle</a>
