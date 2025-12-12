@@ -39,13 +39,13 @@ document.addEventListener("DOMContentLoaded", () => {
         totalDisplay.innerText = `$${total.toFixed(2)}`;
     }
 
-    // --- Buscar producto (por código de barras, código interno o nombre) ---
+    // --- Buscar producto ---
     async function buscarProducto(query) {
         if (!query) return;
 
         try {
             const res = await fetch(`ajax/buscar_producto.php?q=${encodeURIComponent(query)}`);
-            const productos = await res.json();
+            const productos = await res.json(); // siempre un array
 
             if (productos.length > 0) {
                 agregarAlCarrito(productos[0]);
@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- Agregar producto al carrito ---
     function agregarAlCarrito(producto) {
-        if (producto.stock <= 0) {
+        if (!producto.stock || producto.stock <= 0) {
             alert("No hay stock disponible para: " + producto.nombre);
             inputCodigo.value = "";
             inputCodigo.focus();
@@ -105,13 +105,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- Confirmar venta ---
     async function confirmarVenta() {
-        if (Object.keys(carritoActual).length === 0) { 
+        const itemsRaw = Object.values(carritoActual);
+
+        if (itemsRaw.length === 0) { 
             alert("El carrito está vacío"); 
-            return; 
+            return;
         }
+
         if (!confirm("¿Confirmar venta y generar ticket?")) return;
 
-        const items = Object.values(carritoActual);
+        // --- Mapear items al formato que PHP espera ---
+        const items = itemsRaw.map(item => ({
+            id_suplemento: item.id,
+            nombre: item.nombre,
+            cantidad: item.cantidad,
+            precio: item.precio
+        }));
 
         try {
             const res = await fetch("ajax/confirmar_venta.php", {
@@ -135,28 +144,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // --- Event listeners ---
-    if (inputCodigo) {
-        inputCodigo.addEventListener("keypress", e => {
-            if (e.key === "Enter") {
-                e.preventDefault();
-                buscarProducto(inputCodigo.value.trim());
-            }
-        });
-    }
-
-    if (btnBuscar) {
-        btnBuscar.addEventListener("click", () => {
+    inputCodigo?.addEventListener("keypress", e => {
+        if (e.key === "Enter") {
+            e.preventDefault();
             buscarProducto(inputCodigo.value.trim());
-        });
-    }
+        }
+    });
 
-    if (btnCancelar) {
-        btnCancelar.addEventListener("click", cancelarVenta);
-    }
-
-    if (btnCobrar) {
-        btnCobrar.addEventListener("click", confirmarVenta);
-    }
+    btnBuscar?.addEventListener("click", () => buscarProducto(inputCodigo.value.trim()));
+    btnCancelar?.addEventListener("click", cancelarVenta);
+    btnCobrar?.addEventListener("click", confirmarVenta);
 
     tablaCarrito.addEventListener("click", e => {
         if (e.target.classList.contains("btn-remover-item")) {
@@ -167,6 +164,5 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // --- Inicializa carrito ---
     renderizarCarrito();
 });

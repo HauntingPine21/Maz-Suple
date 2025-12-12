@@ -27,9 +27,9 @@ if ($tipo === 'devolucion') {
     if (!$encabezado) die("Devolución no encontrada");
 
     $detalles = $mysqli->query("
-        SELECT dd.cantidad, dd.monto_reembolsado AS importe, l.titulo, dd.monto_reembolsado/dd.cantidad AS precio_unitario
+        SELECT dd.cantidad, dd.monto_reembolsado AS importe, s.nombre AS titulo, dd.monto_reembolsado/dd.cantidad AS precio_unitario
         FROM detalle_devoluciones dd
-        JOIN libros l ON dd.id_libro = l.id
+        JOIN suplementos s ON dd.id_suplemento = s.id
         WHERE dd.id_devolucion = '".$mysqli->real_escape_string($folio)."'
     ");
 
@@ -43,9 +43,9 @@ if ($tipo === 'devolucion') {
     if (!$encabezado) die("Venta no encontrada");
 
     $detalles = $mysqli->query("
-        SELECT dv.*, l.titulo
+        SELECT dv.*, s.nombre AS titulo, dv.precio_unitario, dv.importe
         FROM detalle_ventas dv
-        JOIN libros l ON dv.id_libro = l.id
+        JOIN suplementos s ON dv.id_suplemento = s.id
         WHERE dv.id_venta = '".$mysqli->real_escape_string($folio)."'
     ");
 }
