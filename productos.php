@@ -13,7 +13,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $nombre = trim($_POST['nombre']);
     $marca = trim($_POST['marca']);
     $precio = $_POST['precio'];
-    $stock_inicial = $_POST['stock'] ?? 0;
+    $stock_inicial = intval($_POST['stock'] ?? 0);
+    if ($stock_inicial < 0) $stock_inicial = 0;
     
     $imagen_binaria = null;
     $tipo_mime = 'image/jpeg';
@@ -23,8 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $imagen_binaria = file_get_contents($_FILES['imagen']['tmp_name']);
     }
 
-    if (!is_numeric($precio) || !is_numeric($stock_inicial) || $stock_inicial < 0) {
-        $mensaje = "El precio o el stock no son válidos.";
+    if (!is_numeric($precio)) {
+        $mensaje = "El precio no es válido.";
     } else {
         $mysqli->begin_transaction();
         try {
@@ -60,7 +61,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         }
     }
 }
-
 
 // ================================
 // ACTIVAR / DESACTIVAR
@@ -107,18 +107,15 @@ $productos = $mysqli->query($sql_suplementos);
     <div class="navbar-logo">
         <img src="assets/ImgLogo.png" alt="Logo">
     </div>
-
     <button class="menu-toggle" id="mobile-menu-btn">
         <span></span><span></span><span></span>
     </button>
-
     <div class="navbar-menu" id="navbar-menu">
         <div class="navbar-links">
             <a href="dashboard.php" class="nav-link">🏠 Inicio</a>
             <a href="ventas.php" class="nav-link">🛒 Punto de Venta</a>
             <a href="devoluciones.php" class="nav-link">↩️ Devoluciones</a>
         </div>
-        
         <?php if ($rol === 'admin'): ?>
         <hr class="nav-divider">
         <div class="dropdown">
@@ -129,7 +126,6 @@ $productos = $mysqli->query($sql_suplementos);
                 <a href="usuarios.php">Usuarios</a>
             </div>
         </div>
-
         <div class="dropdown">
             <button class="dropbtn">📈 Reportes ▾</button>
             <div class="dropdown-content">
@@ -141,7 +137,6 @@ $productos = $mysqli->query($sql_suplementos);
             </div>
         </div>
         <?php endif; ?>
-
         <div class="navbar-user-info">
             <span class="user-text">Cajero: 
                 <strong><?php echo htmlspecialchars($_SESSION['user']['nombre']); ?></strong>
@@ -174,11 +169,14 @@ $productos = $mysqli->query($sql_suplementos);
                     
                     <label for="marca">Marca</label>
                     <input type="text" id="marca" name="marca" required placeholder="Ej: NutriPower" class="input-padded">
-                </div>
-                <div>
+                    
                     <label for="precio">Precio de Venta ($)</label>
                     <input type="number" id="precio" name="precio" required step="0.01" min="0" placeholder="Ej: 250.00" class="input-padded">
-                    
+
+                    <label for="stock">Stock Inicial</label>
+                    <input type="number" id="stock" name="stock" min="0" value="0" placeholder="Ej: 10" class="input-padded">
+                </div>
+                <div>
                     <label for="imagen">Imagen (Máx. 2MB)</label>
                     <input type="file" id="imagen" name="imagen" accept="image/*" class="file-input-padded">
                 </div>
@@ -207,9 +205,7 @@ $productos = $mysqli->query($sql_suplementos);
                     <?php if ($productos && $productos->num_rows > 0): ?>
                         <?php while($p = $productos->fetch_assoc()): ?>
                             <tr class="<?= $p['estatus'] ? '' : 'row-inactive' ?>">
-                                <td>
-                                    <img src="img.php?tipo=suplemento&id=<?= $p['id'] ?>" class="img-product-small" alt="Imagen del producto">
-                                </td>
+                                <td><img src="img.php?tipo=suplemento&id=<?= $p['id'] ?>" class="img-product-small" alt="Imagen del producto"></td>
                                 <td><?= htmlspecialchars($p['codigo']) ?></td>
                                 <td><?= htmlspecialchars($p['nombre']) ?></td>
                                 <td><?= htmlspecialchars($p['marca']) ?></td>
@@ -218,7 +214,6 @@ $productos = $mysqli->query($sql_suplementos);
                                 <td><?= $p['estatus'] ? '<span class="text-success-bold">ACTIVO</span>' : '<span class="text-danger-simple">INACTIVO</span>' ?></td>
                                 <td class="text-center text-nowrap action-col">
                                     <a href="editar_producto.php?id=<?= $p['id'] ?>" class="btn-editar">✏️ Editar</a>
-                                    
                                     <?php if ($p['estatus']): ?>
                                         <a href="productos.php?action=desactivar&id=<?= $p['id'] ?>" 
                                         class="btn-desactivar btn-confirm-action"
@@ -241,7 +236,6 @@ $productos = $mysqli->query($sql_suplementos);
                         </tr>
                     <?php endif; ?>
                 </tbody>
-
             </table>
         </div>
     </div>
@@ -249,17 +243,13 @@ $productos = $mysqli->query($sql_suplementos);
 
 <script src="js/main.js"></script>
 <script>
-    // Este script se mantiene para la confirmación de acciones
     document.querySelectorAll('.btn-confirm-action').forEach(btn => {
         btn.addEventListener('click', function(event) {
             const message = this.getAttribute('data-confirm-message');
-            if (!confirm(message)) {
-                event.preventDefault();
-            }
+            if (!confirm(message)) event.preventDefault();
         });
     });
 
-    // Script para la barra de navegación móvil (se puede mover a main.js)
     document.getElementById('mobile-menu-btn').addEventListener('click', function() {
         document.getElementById('navbar-menu').classList.toggle('active');
     });

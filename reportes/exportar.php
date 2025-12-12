@@ -1,9 +1,4 @@
 <?php
-// =================================================================
-// ARCHIVO: exportar.php
-// OBJETIVO: Generar y forzar la descarga de archivos CSV con filtros,
-//           asegurando seguridad (SQL seguro) y sincronía con vistas.
-// =================================================================
 require_once '../config/db.php';
 
 if (!isset($_GET['tipo'])) {
@@ -13,19 +8,15 @@ if (!isset($_GET['tipo'])) {
 $tipo = $_GET['tipo'];
 $filename = "reporte_" . $tipo . "_" . date('Ymd_Hi') . ".csv";
 
-// Forzar descarga
+// Headers CSV
 header('Content-Type: text/csv; charset=utf-8');
 header('Content-Disposition: attachment; filename="' . $filename . '"');
 
-// Abrir salida estándar
 $output = fopen('php://output', 'w');
 
-// BOM UTF-8 para Excel
+// BOM UTF-8
 fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
 
-// ================================================================
-// SWITCH PRINCIPAL DE REPORTES
-// ================================================================
 switch ($tipo) {
 
     // ============================================================
@@ -36,35 +27,36 @@ switch ($tipo) {
         $filtro_q = $_GET['q'] ?? "";
         $solo_activos = isset($_GET['activos']) && $_GET['activos'] == "1";
 
-        fputcsv($output, ['Código', 'Título del Libro', 'Precio Venta', 'Stock Actual', 'Estado']);
+        fputcsv($output, ['Código', 'Nombre', 'Marca', 'Precio Venta', 'Stock Actual', 'Estado']);
 
         $sql = "SELECT 
-                    l.codigo,
-                    l.titulo,
-                    l.precio_venta,
+                    s.codigo,
+                    s.nombre,
+                    s.marca,
+                    s.precio_venta,
                     e.cantidad,
-                    CASE l.estatus WHEN 1 THEN 'ACTIVO' ELSE 'INACTIVO' END AS estado
-                FROM libros l
-                JOIN existencias e ON l.id = e.id_libro
+                    CASE s.estatus WHEN 1 THEN 'ACTIVO' ELSE 'INACTIVO' END AS estado
+                FROM suplementos s
+                LEFT JOIN existencias e ON s.id = e.id_suplemento
                 WHERE 1=1";
 
-        // Construcción segura del query
         $params = [];
         $types = "";
 
         if ($filtro_q !== "") {
-            $sql .= " AND (l.codigo LIKE ? OR l.titulo LIKE ?)";
+            $sql .= " AND (s.codigo LIKE ? OR s.nombre LIKE ? OR s.marca LIKE ?)";
             $like = "%" . $filtro_q . "%";
             $params[] = $like;
             $params[] = $like;
-            $types .= "ss";
+            $params[] = $like;
+            $types .= "sss";
         }
 
         if ($solo_activos) {
-            $sql .= " AND l.estatus = 1";
+            $sql .= " AND s.estatus = 1";
         }
 
-        $sql .= " ORDER BY l.titulo ASC";
+        $sql .= " ORDER BY s.nombre ASC";
 
         $stmt = $mysqli->prepare($sql);
         if (!empty($params)) {
@@ -76,10 +68,11 @@ switch ($tipo) {
         while ($row = $res->fetch_assoc()) {
             fputcsv($output, $row);
         }
+
         break;
 
     // ============================================================
-    // VENTAS (ENCABEZADO SIMPLE)
+    // VENTAS (ENCABEZADO)
     // ============================================================
     case 'ventas':
 
@@ -90,7 +83,7 @@ switch ($tipo) {
         $iniDB = $f1 . " 00:00:00";
         $finDB = $f2 . " 23:59:59";
 
-        fputcsv($output, ['Folio', 'Fecha/Hora', 'Cajero', 'Subtotal', 'IVA', 'Total Venta']);
+        fputcsv($output, ['Folio', 'Fecha', 'Cajero', 'Subtotal', 'IVA', 'Total', 'Estado']);
 
         $sql = "SELECT 
                     v.id,
@@ -98,13 +91,14 @@ switch ($tipo) {
                     u.nombre_completo,
                     v.subtotal,
                     v.iva,
-                    v.total
+                    v.total,
+                    v.estado
                 FROM ventas v
                 JOIN usuarios u ON v.id_usuario = u.id
                 WHERE v.fecha_hora BETWEEN ? AND ?";
 
-        $types = "ss";
         $params = [$iniDB, $finDB];
+        $types = "ss";
 
         if ($cajero > 0) {
             $sql .= " AND v.id_usuario = ?";
@@ -122,6 +116,7 @@ switch ($tipo) {
         while ($row = $res->fetch_assoc()) {
             fputcsv($output, $row);
         }
+
         break;
 
     // ============================================================
@@ -137,32 +132,33 @@ switch ($tipo) {
         $finDB = $f2 . " 23:59:59";
 
         fputcsv($output, [
-            'Folio', 'Fecha/Hora', 'Código Producto',
-            'Nombre Producto', 'Cant.', 'Precio Unit.', 'Subtotal Línea'
+            'Folio Venta', 'Fecha', 'Código', 'Nombre',
+            'Cant.', 'Precio Unit.', 'Subtotal Línea'
         ]);
 
         $sql = "SELECT 
                     v.id AS folio,
                     v.fecha_hora,
-                    l.codigo,
-                    l.titulo AS nombre,
+                    s.codigo,
+                    s.nombre,
                     dv.cantidad,
                     dv.precio_unitario,
                     dv.importe
                 FROM detalle_ventas dv
                 JOIN ventas v ON dv.id_venta = v.id
-                JOIN libros l ON dv.id_libro = l.id
+                JOIN suplementos s ON dv.id_suplemento = s.id
                 WHERE v.fecha_hora BETWEEN ? AND ?";
 
-        $types = "ss";
         $params = [$iniDB, $finDB];
+        $types = "ss";
 
         if ($producto !== "") {
-            $sql .= " AND (l.titulo LIKE ? OR l.codigo LIKE ?)";
+            $sql .= " AND (s.nombre LIKE ? OR s.codigo LIKE ? OR s.marca LIKE ?)";
             $like = "%".$producto."%";
             $params[] = $like;
             $params[] = $like;
-            $types .= "ss";
+            $params[] = $like;
+            $types .= "sss";
         }
 
         $sql .= " ORDER BY v.fecha_hora DESC";
@@ -175,6 +171,7 @@ switch ($tipo) {
         while ($row = $res->fetch_assoc()) {
             fputcsv($output, $row);
         }
+
         break;
 
     // ============================================================
@@ -189,21 +186,21 @@ switch ($tipo) {
         $finDB = $f2 . " 23:59:59";
 
         fputcsv($output, [
-            'Folio Venta', 'Fecha Devolución', 'Código Producto',
-            'Nombre Producto', 'Cant. Dev.', 'Monto Devuelto', 'Motivo'
+            'Folio Venta', 'Fecha Devolución', 'Código', 'Nombre',
+            'Cant. Dev.', 'Monto Dev.', 'Motivo'
         ]);
 
         $sql = "SELECT 
                     d.id_venta,
                     d.fecha_hora,
-                    l.codigo,
-                    l.titulo,
+                    s.codigo,
+                    s.nombre,
                     dd.cantidad,
                     dd.monto_reembolsado,
                     d.motivo
                 FROM devoluciones d
                 JOIN detalle_devoluciones dd ON d.id = dd.id_devolucion
-                JOIN libros l ON dd.id_libro = l.id
+                JOIN suplementos s ON dd.id_suplemento = s.id
                 WHERE d.fecha_hora BETWEEN ? AND ?
                 ORDER BY d.fecha_hora DESC";
 
@@ -221,7 +218,8 @@ switch ($tipo) {
     // COMPRAS
     // ============================================================
     case 'compras':
-        fputcsv($output, ['Folio Compra', 'Fecha/Hora', 'Proveedor', 'Total Compra']);
+
+        fputcsv($output, ['Folio', 'Fecha', 'Proveedor', 'Total Compra']);
 
         $sql = "SELECT 
                     c.id,
@@ -233,6 +231,7 @@ switch ($tipo) {
                 ORDER BY c.fecha_hora DESC";
 
         $res = $mysqli->query($sql);
+
         while ($row = $res->fetch_assoc()) {
             fputcsv($output, $row);
         }
