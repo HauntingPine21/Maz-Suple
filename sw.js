@@ -1,71 +1,58 @@
-// ============================================================
-// SERVICE WORKER | POS Offline-First (PWA)
-// ============================================================
+const BASE = "/MAZ-SUPLE";
+const CACHE_NAME = "mazsuplementos-v1";
 
-const CACHE_NAME = 'pos-libreria-v2';
-const ASSETS_TO_CACHE = [
-  './',
-  'index.php',
-  'dashboard.php',
-  'ventas.php',
-  'css/styles.css',
-  'css/ticket.css',
-  'js/main.js',
-  'js/ventas.js',
-  'js/offline_manager.js',
-  'assets/img/logo-maria-de-letras_v2.svg',
-  'assets/img/logo-maria-de-letras-ticket.png'
+const FILES_TO_CACHE = [
+    `${BASE}/`,
+    `${BASE}/index.php`,
+    `${BASE}/dashboard.php`,
+    `${BASE}/ventas.php`,
+    `${BASE}/css/index.css`,
+    `${BASE}/css/ventas.css`,
+    `${BASE}/js/main.js`,
+    `${BASE}/js/ventas.js`,
+    `${BASE}/js/offline_manager.js`
 ];
 
-// 1. INSTALL: Pre-cache de assets esenciales
-self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => {
-        console.log('[SW] Pre-cacheando assets...');
-        return cache.addAll(ASSETS_TO_CACHE);
-      })
-      .then(() => self.skipWaiting())
-  );
+self.addEventListener("install", event => {
+    event.waitUntil(
+        caches.open(CACHE_NAME).then(cache => cache.addAll(FILES_TO_CACHE))
+    );
+    self.skipWaiting();
 });
 
-// 2. ACTIVATE: Limpieza de caches antiguos
-self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys().then(keys => 
-      Promise.all(
-        keys.filter(key => key !== CACHE_NAME)
-            .map(key => caches.delete(key))
-      )
-    ).then(() => self.clients.claim())
-  );
+self.addEventListener("activate", event => {
+    event.waitUntil(
+        caches.keys().then(keys =>
+            Promise.all(
+                keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))
+            )
+        )
+    );
+    self.clients.claim();
 });
 
-// 3. FETCH: Intercepta peticiones GET
-self.addEventListener('fetch', event => {
-  // Ignora todo lo que no sea GET
-  if (event.request.method !== 'GET') return;
+// *************************************************************
+// CORRECCIÓN APLICADA AQUÍ: Manejo del fallo de red (fetch)
+// *************************************************************
 
-  // Ignora AJAX y endpoints de API (ajustar según tu proyecto)
-  if (event.request.url.includes('ajax/') || event.request.url.includes('api/')) return;
+self.addEventListener("fetch", event => {
+    event.respondWith(
+        caches.match(event.request)
+            .then(resp => {
+                // 1. Si el recurso está en el caché, lo devuelve inmediatamente (Cache First).
+                if (resp) return resp;
 
-  event.respondWith(
-    fetch(event.request)
-      .then(response => {
-        // Si hay respuesta válida, actualizar cache
-        if (response && response.status === 200) {
-          const responseClone = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(event.request, responseClone));
-        }
-        return response;
-      })
-      .catch(() => {
-        // Fallback: buscar en cache
-        return caches.match(event.request).then(cachedResp => {
-          if (cachedResp) return cachedResp;
-          // Si no hay cache, mostrar fallback básico (opcional)
-          if (event.request.destination === 'document') return caches.match('./');
-        });
-      })
-  );
+                // 2. Si NO está en caché, intenta ir a la red (fetch).
+                return fetch(event.request)
+                    // 3. ¡IMPORTANTE! Captura el error de red (TypeError: Failed to fetch)
+                    .catch(error => {
+                        // La red falló. Si no pudimos obtener el recurso de la red ni del caché, 
+                        // esto evita que el Service Worker se rompa.
+                        console.error('Falló la red para:', event.request.url, error);
+                        // Opcional: Podrías devolver un recurso de fallback aquí, como una imagen predeterminada 
+                        // o una página HTML de "Sin Conexión".
+                        // Por ahora, solo se maneja el error para evitar el Uncaught.
+                    });
+            })
+    );
 });

@@ -17,7 +17,7 @@ if (isset($_SESSION['error_mensaje'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Maz-Suple | Iniciar sesión</title>
     <link rel="stylesheet" href="css/index.css?v=<?php echo time(); ?>">
-    <link rel="icon" type="image/png" href="assets/img/logo-maria-de-letras_icon.svg">
+  
   </head>
 
   <body>
