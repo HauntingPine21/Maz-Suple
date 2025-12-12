@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['folio_input'])) {
     // ============================
     // 1. BUSCAR ENCABEZADO DE VENTA
     // ============================
-    $sql_v = "SELECT v.id, v.fecha_hora, v.total, u.nombre AS cajero
+    $sql_v = "SELECT v.id, v.fecha_hora, v.total, u.username AS cajero
               FROM ventas v
               JOIN usuarios u ON v.id_usuario = u.id
               WHERE v.id = '$folio_id'";
@@ -31,13 +31,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['folio_input'])) {
         $id_venta_encontrada = intval($venta_encontrada['id']);
 
         // ======================================
-        // 2. BUSCAR DETALLES + LIBROS + CODIGOS
+        // 2. BUSCAR DETALLES + SUPLEMENTOS + CODIGOS
         // ======================================
-        $sql_d = "SELECT dv.id_libro, dv.cantidad, dv.precio_unitario, dv.importe,
-                      l.titulo, l.codigo
-              FROM detalle_ventas dv
-              JOIN libros l ON dv.id_libro = l.id
-              WHERE dv.id_venta = $id_venta_encontrada";
+        $sql_d = "SELECT dv.id_suplemento, dv.cantidad, dv.precio_unitario, dv.importe,
+                         s.nombre AS titulo, s.codigo
+                  FROM detalle_ventas dv
+                  JOIN suplementos s ON dv.id_suplemento = s.id
+                  WHERE dv.id_venta = $id_venta_encontrada";
 
         $res_d = $mysqli->query($sql_d);
 
@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['folio_input'])) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>María de Letras | Devoluciones</title>
+    <title>Maz-Suple | Devoluciones</title>
     <link rel="stylesheet" href="css/devoluciones.css?v=<?php echo time(); ?>">
     <link rel="icon" type="image/png" href="assets/img/logo-maria-de-letras_icon.svg">
 </head>
@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['folio_input'])) {
                 <a href="productos.php">Productos</a>
                 <a href="compras.php">Compras</a>
                 <a href="usuarios.php">Usuarios</a>
-                </div>
+            </div>
         </div>
 
         <div class="dropdown">
@@ -103,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['folio_input'])) {
 
         <div class="navbar-user-info">
             <span class="user-text">Cajero: 
-                <strong><?php echo htmlspecialchars($_SESSION['user']['nombre']); ?></strong>
+                <strong><?php echo htmlspecialchars($_SESSION['user']['username']); ?></strong>
             </span>
             <a href="includes/logout.php" class="btn-logout">Cerrar Sesión</a>
         </div>
@@ -174,7 +174,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['folio_input'])) {
                     <tr>
                         <td class="text-center">
                             <input type="checkbox" class="check-devolucion"
-                                   data-id="<?= $item['id_libro'] ?>">
+                                   data-id="<?= $item['id_suplemento'] ?>">
                         </td>
 
                         <td><?= htmlspecialchars($item['titulo']) ?></td>
@@ -184,7 +184,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['folio_input'])) {
 
                         <td class="text-center">
                             <input type="number"
-                                   id="cant_<?= $item['id_libro'] ?>"
+                                   id="cant_<?= $item['id_suplemento'] ?>"
                                    min="1"
                                    max="<?= $item['cantidad'] ?>"
                                    value="1"
@@ -240,7 +240,7 @@ if (btn) {
         document.querySelectorAll('.check-devolucion:checked').forEach(ch => {
             const id = ch.dataset.id;
             const q = document.getElementById('cant_' + id).value;
-            items.push({ id_libro: parseInt(id), cantidad: parseInt(q) });
+            items.push({ id_suplemento: parseInt(id), cantidad: parseInt(q) });
         });
 
         if (items.length === 0) {
@@ -270,33 +270,6 @@ if (btn) {
         }
     });
 }
-
-// MANEJO DE FOLIOS OFFLINE
-document.addEventListener("DOMContentLoaded", () => {
-
-    const form = document.querySelector(".form-search"); // Clase cambiada
-    const input = document.querySelector('input[name="folio_input"]');
-
-    form.addEventListener("submit", async (e) => {
-
-        const folio = input.value.trim();
-
-        if (folio.toUpperCase().includes("OFF-") || isNaN(folio)) {
-
-            e.preventDefault();
-
-            const res = await fetch(`ajax/buscar_id_folio.php?folio=${folio}`);
-            const data = await res.json();
-
-            if (data.status === "ok") {
-                input.value = data.id_real;
-                form.submit();
-            } else {
-                alert("Ese Folio Offline no existe o no se ha sincronizado.");
-            }
-        }
-    });
-});
 </script>
 
 </body>
