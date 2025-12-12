@@ -33,19 +33,19 @@ $rol = $usuario['rol'];
             
             <?php if ($rol === 'admin'): ?>
                 <hr class="nav-divider"> <div class="dropdown">
-                    <a href="#" class="dropbtn">Administración</a>
+                    <a href="#" class="dropbtn">Administración ▾</a>
                     <div class="dropdown-content">
-                        <a href="usuarios.php">Gestionar Usuarios</a>
-                        <a href="productos.php">Catálogo de Suplementos</a>
-                        <a href="compras.php">Registrar Compras</a>
+                        <a href="usuarios.php">Gestionar usuarios</a>
+                        <a href="productos.php">Catalogo de suplementos</a>
+                        <a href="compras.php">Registrar compras</a>
                     </div>
                 </div>
 
                 <div class="dropdown">
-                    <a href="#" class="dropbtn">Reportes</a>
+                    <a href="#" class="dropbtn">Reportes ▾</a>
                     <div class="dropdown-content">
-                        <a href="reportes/inventario.php">Reporte Inventario</a>
-                        <a href="reportes/ventas_encabezado.php">Reporte Ventas</a>
+                        <a href="reportes/inventario.php">Reporte inventario</a>
+                        <a href="reportes/ventas_encabezado.php">Reporte venta</a>
                     </div>
                 </div>
             <?php endif; ?>

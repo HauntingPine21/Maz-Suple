@@ -24,6 +24,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     dropdownBtns.forEach(btn => {
         btn.addEventListener('click', function (e) {
+            // Si es un enlace con href='#', prevenimos el salto de página
+            if (this.tagName === 'A' && this.getAttribute('href') === '#') {
+                e.preventDefault();
+            }
+            
             e.stopPropagation(); // Evita que el clic se propague al documento
 
             const dropdownContent = this.nextElementSibling;
