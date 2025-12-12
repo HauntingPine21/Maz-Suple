@@ -1,5 +1,5 @@
 <?php
-// devoluciones.php
+// devoluciones.php (ADAPTADO A SUPLEMENTOS)
 
 require_once '../includes/seguridad_basica.php';
 require_once '../config/db.php';
@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['folio_input'])) {
     // ============================
     // 1. BUSCAR ENCABEZADO DE VENTA
     // ============================
-    $sql_v = "SELECT v.id, v.fecha_hora, v.total, u.nombre AS cajero
+    $sql_v = "SELECT v.id, v.fecha_hora, v.total, u.nombre_completo AS cajero
               FROM ventas v
               JOIN usuarios u ON v.id_usuario = u.id
               WHERE v.id = '$folio_id'";
@@ -31,16 +31,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['folio_input'])) {
         $id_venta_encontrada = intval($venta_encontrada['id']);
 
         // ======================================
-        // 2. BUSCAR DETALLES + LIBROS + CODIGOS
+        // 2. BUSCAR DETALLES + SUPLEMENTOS
         // ======================================
-        $sql_d = "SELECT dv.id_libro, dv.cantidad, dv.precio_unitario, dv.importe,
-                         l.titulo, l.codigo
+        $sql_d = "SELECT dv.id_suplemento, dv.cantidad, dv.precio_unitario, dv.importe,
+                         s.nombre AS nombre_producto, s.codigo AS codigo_interno
                   FROM detalle_ventas dv
-                  JOIN libros l ON dv.id_libro = l.id
+                  JOIN suplementos s ON dv.id_suplemento = s.id
                   WHERE dv.id_venta = $id_venta_encontrada";
 
         $res_d = $mysqli->query($sql_d);
-
 
         while ($row = $res_d->fetch_assoc()) {
             $detalles_venta[] = $row;
@@ -56,9 +55,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['folio_input'])) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Ma<-Suple | Devoluciones</title>
+    <title>Maz-Suple | Devoluciones</title>
     <link rel="stylesheet" href="../css/devolucionesReportes.css?v=<?php echo time(); ?>">
-    
 </head>
 
 <body>
@@ -73,6 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['folio_input'])) {
     </button>
 
     <div class="navbar-menu" id="navbar-menu">
+
         <div class="dropdown">
             <button class="dropbtn">Cajero ▾</button>
             <div class="dropdown-content">
@@ -164,17 +163,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['folio_input'])) {
                 <tr>
                     <td class="text-center">
                         <input type="checkbox" class="check-devolucion"
-                               data-id="<?= $item['id_libro'] ?>">
+                               data-id="<?= $item['id_suplemento'] ?>">
                     </td>
 
-                    <td><?= htmlspecialchars($item['titulo']) ?></td>
-                    <td><?= htmlspecialchars($item['codigo']) ?></td>
+                    <td><?= htmlspecialchars($item['nombre_producto']) ?></td>
+                    <td><?= htmlspecialchars($item['codigo_interno']) ?></td>
 
                     <td class="text-center"><?= $item['cantidad'] ?></td>
 
                     <td class="text-center">
                         <input type="number"
-                               id="cant_<?= $item['id_libro'] ?>"
+                               id="cant_<?= $item['id_suplemento'] ?>"
                                min="1"
                                max="<?= $item['cantidad'] ?>"
                                value="1"
@@ -190,7 +189,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['folio_input'])) {
         <div class="mt-15">
             <label for="motivo_devolucion">Motivo de la Devolución</label>
             <input type="text" id="motivo_devolucion"
-                   placeholder="Ej: Defecto de fabricación..."
+                   placeholder="Ej: Producto defectuoso..."
                    class="w-full">
         </div>
 
@@ -229,7 +228,7 @@ if (btn) {
         document.querySelectorAll('.check-devolucion:checked').forEach(ch => {
             const id = ch.dataset.id;
             const q = document.getElementById('cant_' + id).value;
-            items.push({ id_libro: parseInt(id), cantidad: parseInt(q) });
+            items.push({ id_suplemento: parseInt(id), cantidad: parseInt(q) });
         });
 
         if (items.length === 0) {
@@ -259,33 +258,6 @@ if (btn) {
         }
     });
 }
-
-// MANEJO DE FOLIOS OFFLINE
-document.addEventListener("DOMContentLoaded", () => {
-
-    const form = document.querySelector("form");
-    const input = document.querySelector('input[name="folio_input"]');
-
-    form.addEventListener("submit", async (e) => {
-
-        const folio = input.value.trim();
-
-        if (folio.toUpperCase().includes("OFF-") || isNaN(folio)) {
-
-            e.preventDefault();
-
-            const res = await fetch(`ajax/buscar_id_folio.php?folio=${folio}`);
-            const data = await res.json();
-
-            if (data.status === "ok") {
-                input.value = data.id_real;
-                form.submit();
-            } else {
-                alert("Ese Folio Offline no existe o no se ha sincronizado.");
-            }
-        }
-    });
-});
 </script>
 
 </body>
