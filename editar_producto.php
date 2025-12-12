@@ -19,6 +19,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $nombre = trim($_POST['nombre']);
     $marca = trim($_POST['marca']);
     $precio = floatval($_POST['precio']);
+    $stock = intval($_POST['stock'] ?? 0);
+    if ($stock < 0) $stock = 0;
 
     $mysqli->begin_transaction();
     try {
@@ -27,6 +29,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $stmt = $mysqli->prepare($sql);
         $stmt->bind_param("sssdi", $codigo, $nombre, $marca, $precio, $id_producto);
         $stmt->execute();
+
+        // Actualizar stock en existencias
+        $sql_stock = "INSERT INTO existencias (id_suplemento, cantidad)
+                      VALUES (?, ?)
+                      ON DUPLICATE KEY UPDATE cantidad = ?";
+        $stmt_stock = $mysqli->prepare($sql_stock);
+        $stmt_stock->bind_param("iii", $id_producto, $stock, $stock);
+        $stmt_stock->execute();
 
         // Si hay nueva imagen, actualizar BLOB
         if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === 0) {
@@ -67,8 +77,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
 }
 
-// 3. Obtener datos actuales del producto
-$sql_producto = "SELECT * FROM suplementos WHERE id = ?";
+// 3. Obtener datos actuales del producto y stock
+$sql_producto = "
+    SELECT s.*, COALESCE(e.cantidad,0) AS stock
+    FROM suplementos s
+    LEFT JOIN existencias e ON s.id = e.id_suplemento
+    WHERE s.id = ?
+";
 $stmt = $mysqli->prepare($sql_producto);
 $stmt->bind_param("i", $id_producto);
 $stmt->execute();
@@ -86,7 +101,7 @@ if ($resultado && $resultado->num_rows > 0) {
 <head>
     <meta charset="utf-8">
     <title>Editar Suplemento | <?= htmlspecialchars($producto['nombre']) ?></title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/editar.css">
 </head>
 <body>
     <div class="main-container">
@@ -114,11 +129,14 @@ if ($resultado && $resultado->num_rows > 0) {
 
                         <label>Marca</label>
                         <input type="text" name="marca" required value="<?= htmlspecialchars($producto['marca']) ?>" class="input-padded">
-                    </div>
-                    <div>
-                        <label>Precio</label>
+
+                        <label>Precio ($)</label>
                         <input type="number" name="precio" required step="0.01" min="0" value="<?= htmlspecialchars($producto['precio_venta']) ?>" class="input-padded">
 
+                        <label>Stock</label>
+                        <input type="number" name="stock" min="0" value="<?= htmlspecialchars($producto['stock']) ?>" class="input-padded">
+                    </div>
+                    <div>
                         <label>Cambiar Imagen (Opcional)</label>
                         <input type="file" name="imagen" accept="image/*" class="file-input-padded">
 

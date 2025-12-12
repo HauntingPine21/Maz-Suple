@@ -140,10 +140,6 @@ $titulo_reporte = "REPORTE DE INVENTARIO ACTUAL";
 
                     <button type="submit" class="btn-general w-150">Filtrar</button>
 
-                    <button type="button" class="btn-general w-150 btn-print">
-                        Imprimir / PDF
-                    </button>
-
                     <?php 
                         $csv_url = "../reportes/exportar.php?tipo=inventario"
                                  . "&q=" . urlencode($filtro_q)

@@ -1,0 +1,145 @@
+/* ====================================================================
+    0. PALETA DE COLORES Y ESTRUCTURA GLOBAL
+==================================================================== */
+:root {
+    --color-acento-principal: #007bff;
+    --color-acento-secundario: #0056b3;
+    --color-fondo: #ffffff;
+    --color-borde: #dee2e6;
+    --color-texto-oscuro: #212529;
+    --color-texto-claro: #ffffff;
+    --color-error: #dc3545;
+    --color-exito: #28a745;
+    --main-bg: #f8f9fa;
+}
+
+/* ====================================================================
+    1. LAYOUT GENERAL
+==================================================================== */
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--main-bg);
+    margin: 0;
+    color: var(--color-texto-oscuro);
+}
+
+.main-container {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+/* ====================================================================
+    2. TARJETAS Y FORMULARIOS
+==================================================================== */
+.card {
+    background: var(--color-fondo);
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    border: 1px solid var(--color-borde);
+    margin-bottom: 30px;
+}
+
+h2 {
+    margin-bottom: 20px;
+    color: var(--color-texto-oscuro);
+}
+
+label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.input-padded {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid var(--color-borde);
+    border-radius: 6px;
+    font-size: 15px;
+    box-sizing: border-box;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.input-padded:focus {
+    border-color: var(--color-acento-principal);
+    box-shadow: 0 0 0 3px rgba(0,123,255,0.2);
+    outline: none;
+}
+
+.file-input-padded {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.img-product-small {
+    max-width: 150px;
+    border-radius: 6px;
+    margin-top: 10px;
+    border: 1px solid var(--color-borde);
+}
+
+/* ====================================================================
+    3. BOTONES
+==================================================================== */
+.btn-general {
+    display: inline-block;
+    padding: 10px 18px;
+    background-color: var(--color-acento-principal);
+    color: var(--color-texto-claro);
+    font-weight: 600;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.btn-general:hover {
+    background-color: var(--color-acento-secundario);
+}
+
+.mt-15 { margin-top: 15px; }
+
+/* ====================================================================
+    4. ALERTAS
+==================================================================== */
+.alert-custom-success {
+    background: #d4edda;
+    color: var(--color-exito);
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #c3e6cb;
+    margin-bottom: 20px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.alert-custom-danger {
+    background: #f8d7da;
+    color: var(--color-error);
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #f5c6cb;
+    margin-bottom: 20px;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* ====================================================================
+    5. GRID PARA FORMULARIO
+==================================================================== */
+.grid-2-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+}
+
+@media (max-width: 768px) {
+    .grid-2-cols {
+        grid-template-columns: 1fr;
+    }
+    .img-product-small {
+        max-width: 100%;
+    }
+}
