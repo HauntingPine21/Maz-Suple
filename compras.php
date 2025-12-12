@@ -75,7 +75,6 @@ $suplementos_json = json_encode($suplementos);
         <div class="dropdown">
             <button class="dropbtn">Reportes ▾</button>
             <div class="dropdown-content">
-                <a href="reportes/compras.php">Compras</a>
                 <a href="reportes/devoluciones.php">Devoluciones</a>
                 <a href="reportes/inventario.php">Inventario</a>
                 <a href="reportes/ventas_detalle.php">Ventas Detalle</a>

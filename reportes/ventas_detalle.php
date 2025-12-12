@@ -92,7 +92,6 @@ while ($row = $res->fetch_assoc()) {
             <div class="dropdown">
                 <button class="dropbtn active">Reportes</button>
                 <div class="dropdown-content show">
-                    <a href="compras.php">Reporte compras</a>
                     <a href="devoluciones.php">Reporte devoluciones</a>
                     <a href="inventario.php">Reporte inventario</a>
                     <a href="ventas_detalle.php" class="active">Reporte detalle</a>
