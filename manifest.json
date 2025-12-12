@@ -1,23 +1,12 @@
 {
-    "_comment": "RESPONSABLE: Rol 7 (POS Offline-First (PWA) con sincronización diferida) - App Instalable",
-    "name": "Librería María De Letras POS",
-    "short_name": "LibreríaPOS",
-    "start_url": "/dashboard.php",
-    "scope": "/",
-    "display": "standalone",
-    "background_color": "#ffffff",
-    "theme_color": "#0d6efd",
-    "icons": [
-      {
-        "src": "assets/img/icon-192.png",
-        "sizes": "192x192",
-        "type": "image/png"
-      },
-      {
-        "src": "assets/img/icon-512.png",
-        "sizes": "512x512",
-        "type": "image/png"
-      }
-    ]
-  }
+  "_comment": "RESPONSABLE: Rol 7 (POS Offline-First PWA con sincronización diferida) - App Instalable",
+  "name": "Maz-Suplementos POS",
+  "short_name": "MazPOS",
+  "start_url": "/MAZ-SUPLE/dashboard.php",
+  "scope": "/MAZ-SUPLE/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2196f3"
+}
+
   

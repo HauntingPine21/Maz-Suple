@@ -38,9 +38,6 @@ if (!isset($_SESSION['carrito'])) {
         </button>
 
         <div class="navbar-menu" id="navbar-menu">
-            <button onclick="sincronizarVentas()" class="btn-general w-full sync-btn">
-                Sincronizar (Offline)
-            </button>
             
             <div class="navbar-links">
                 <a href="dashboard.php" class="nav-link"> Inicio</a>
