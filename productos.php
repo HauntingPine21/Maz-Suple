@@ -36,6 +36,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             $stmt->bind_param("sssd", $codigo, $nombre, $marca, $precio);
             $stmt->execute();
             $id_suplemento = $mysqli->insert_id;
+            // Insertar código de barras si fue capturado
+                $codigo_barras = trim($_POST['codigo_barras'] ?? '');
+
+                if ($codigo_barras !== '') {
+                    $sql_cb = "INSERT INTO suplementos_codigos (id_suplemento, codigo_barras)
+                            VALUES (?, ?)";
+                    $stmt_cb = $mysqli->prepare($sql_cb);
+                    $stmt_cb->bind_param("is", $id_suplemento, $codigo_barras);
+                    $stmt_cb->execute();
+                }
 
             // Insertar imagen BLOB si existe
             if ($imagen_binaria) {
@@ -162,6 +172,10 @@ $productos = $mysqli->query($sql_suplementos);
                 <div>
                     <label for="codigo">Código</label>
                     <input type="text" id="codigo" name="codigo" required placeholder="Ej: SUP001" class="input-padded">
+                    
+                    <label for="codigo_barras">Código de Barras</label>
+                    <input type="text" id="codigo_barras" name="codigo_barras" placeholder="Escanéalo aquí" class="input-padded">
+
                     
                     <label for="nombre">Nombre</label>
                     <input type="text" id="nombre" name="nombre" required placeholder="Ej: Proteína Whey" class="input-padded">
