@@ -60,11 +60,11 @@ if ($res_supp = $mysqli->query($sql_supp)) {
             <div class="dropdown">
                 <button class="dropbtn">Reportes ▾</button>
                 <div class="dropdown-content">
-                    <a href="reportes/compras.php">Reportes Compra</a>
-                    <a href="reportes/devoluciones.php">Reportes Devoluciones</a>
-                    <a href="reportes/inventario.php">Reportes Inventario</a>
-                    <a href="reportes/ventas_detalle.php">Reportes Detalle</a>
-                    <a href="reportes/ventas_encabezado.php">Reportes Encabezado</a>
+                    <a href="../reportes/compras.php">Reportes Compra</a>
+                    <a href="../reportes/devoluciones.php">Reportes Devoluciones</a>
+                    <a href="../reportes/inventario.php">Reportes Inventario</a>
+                    <a href="../reportes/ventas_detalle.php">Reportes Detalle</a>
+                    <a href="../reportes/ventas_encabezado.php">Reportes Encabezado</a>
                 </div>  
             </div>
         <?php endif; ?>
